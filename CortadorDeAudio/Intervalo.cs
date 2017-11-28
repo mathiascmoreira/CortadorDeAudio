@@ -1,16 +1,19 @@
 ﻿using System;
+using System.Globalization;
 
 namespace CortadorDeAudio
 {
     public class Intervalo
     {
-        public Intervalo(string inicio, string final)
-        {
-            Inicio = inicio;
-            Final = final;
-        }
+        
 
-        public string Inicio { get; set; }
-        public string Final { get; set; }
+        public Intervalo(TimeSpan Inicio, TimeSpan Final)
+        {
+            this.Inicio = Inicio;
+            this.Final = Final;
+        }
+        
+        public TimeSpan Inicio { get; set; }
+        public TimeSpan Final { get; set; }
     }
 }

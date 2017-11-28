@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Timers;
 using System.Windows.Forms;
@@ -27,6 +28,14 @@ namespace CortadorDeAudio
             _audioPlayer.OnPlayerEnds += _audioPlayer_OnPlayerEnds;
 
             SetTimer();
+
+            FormatGrid();
+        }
+
+        private void FormatGrid()
+        {
+            dataGridView.Columns["Inicio"].DefaultCellStyle.Format = "mm':'ss':'ffff";
+            dataGridView.Columns["Final"].DefaultCellStyle.Format = "mm':'ss':'ffff";
         }
 
         private void SetTimer()
@@ -76,14 +85,14 @@ namespace CortadorDeAudio
 
         private void buttonInicialPosition_Click(object sender, EventArgs e)
         {
-            var currentTimeString = GetTimeSpanString(_audioPlayer.GetMusicCurrentTime());
+            var currentTimeString = _audioPlayer.GetMusicCurrentTime();
 
-            txtInitialTime.Text = currentTimeString;
+            txtInitialTime.Text = currentTimeString.ToStringFormat();
         }
 
         private void buttonFinalPosition_Click(object sender, EventArgs e)
         {
-            var currentTimeString = GetTimeSpanString(_audioPlayer.GetMusicCurrentTime());
+            var currentTimeString = _audioPlayer.GetMusicCurrentTime().ToStringFormat();
 
             txtFinalTime.Text = currentTimeString;
         }
@@ -98,10 +107,10 @@ namespace CortadorDeAudio
                 if (string.IsNullOrEmpty(txtFinalTime.Text))
                     throw new Exception("Selecione um tempo final!");
 
-                if (GetTimeSpanFromString(txtInitialTime.Text) >= GetTimeSpanFromString(txtFinalTime.Text))
+                if (txtInitialTime.Text.ToTimeSpan() >= txtFinalTime.Text.ToTimeSpan())
                     throw new Exception("Tempo final deve ser maior que o inicial!");
 
-                _intervalos.Add(new Intervalo(txtInitialTime.Text, txtFinalTime.Text));
+                _intervalos.Add(new Intervalo(txtInitialTime.Text.ToTimeSpan(), txtFinalTime.Text.ToTimeSpan()));
             }
             catch (Exception ex)
             {
@@ -112,9 +121,9 @@ namespace CortadorDeAudio
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
 
-            if (_intervalo != null && _audioPlayer.GetMusicCurrentTime() > GetTimeSpanFromString(_intervalo.Final))
+            if (_intervalo != null && _audioPlayer.GetMusicCurrentTime() > _intervalo.Final)
             {
-                _audioPlayer.SetMusicCurrentTime(GetTimeSpanFromString(_intervalo.Inicio));
+                _audioPlayer.SetMusicCurrentTime(_intervalo.Inicio);
             }
 
             var progressBarPosition = Convert.ToInt32(decimal.Floor(_audioPlayer.GetPosition() * progressBar.Maximum));
@@ -165,44 +174,7 @@ namespace CortadorDeAudio
 
         public string GetTimeLabelText()
         {
-            return $"{GetTimeSpanString(_audioPlayer.GetMusicCurrentTime())}/{GetTimeSpanString(_audioPlayer.GetMusicTotalTime())}";
-        }
-
-        public string GetTimeSpanString(TimeSpan timeSpan)
-        {
-            var timeInMinutes = AddLeftZeroIfNeeded(timeSpan.Minutes);
-            var timeInSeconds = AddLeftZeroIfNeeded(timeSpan.Seconds);
-            var timeInMilliseconds = AddLeftZeroIfNeeded(timeSpan.Milliseconds, 3);
-
-            return $"{ timeInMinutes}:{ timeInSeconds}:{ timeInMilliseconds}";
-        }
-
-        public TimeSpan GetTimeSpanFromString(string timeSpanString)
-        {
-            try
-            {
-                var splittedString = timeSpanString.Split(':');
-
-                var minutes = Convert.ToInt32(splittedString[0]);
-                var seconds = Convert.ToInt32(splittedString[1]);
-                var milliseconds = Convert.ToInt32(splittedString[2]);
-
-                return new TimeSpan(0, 0, minutes, seconds, milliseconds);
-            }
-            catch (Exception)
-            {
-                throw new Exception("Erro ao tentar obter TimeSpan!");
-            }
-        }
-
-        private string AddLeftZeroIfNeeded(int time, int size = 2)
-        {
-            var timeString = time.ToString();
-
-            while (timeString.Length < size)
-                timeString = $"0{timeString}";
-
-            return timeString;
+            return $"{_audioPlayer.GetMusicCurrentTime().ToStringFormat()}/{_audioPlayer.GetMusicTotalTime().ToStringFormat()}";
         }
 
         private void CheckTimer()
@@ -221,7 +193,7 @@ namespace CortadorDeAudio
 
             if (intervalo != null)
             {
-                intervalo.Inicio = txtInitialTime.Text;
+                intervalo.Inicio = txtInitialTime.Text.ToTimeSpan();
                 dataGridView.Refresh();
             }
         }
@@ -234,7 +206,7 @@ namespace CortadorDeAudio
 
             if (intervalo != null)
             {
-                intervalo.Final = txtFinalTime.Text;
+                intervalo.Final = txtFinalTime.Text.ToTimeSpan();
                 dataGridView.Refresh();
             }
         }
@@ -244,9 +216,9 @@ namespace CortadorDeAudio
             if (string.IsNullOrEmpty(txtInitialTime.Text) || string.IsNullOrEmpty(txtFinalTime.Text))
                 return;
 
-            var tamanhoDoIntervalo = GetTimeSpanFromString(txtFinalTime.Text) - GetTimeSpanFromString(txtInitialTime.Text);
+            var tamanhoDoIntervalo = txtFinalTime.Text.ToTimeSpan() - txtInitialTime.Text.ToTimeSpan();
 
-            txtTamanhoDoIntervalo.Text = GetTimeSpanString(tamanhoDoIntervalo);
+            txtTamanhoDoIntervalo.Text = tamanhoDoIntervalo.ToStringFormat();
         }
 
         private void buttonAvancar_Click(object sender, EventArgs e)
@@ -264,9 +236,9 @@ namespace CortadorDeAudio
             if (string.IsNullOrEmpty(txtInitialTime.Text))
                 return;
 
-            var newTime = GetTimeSpanFromString(txtInitialTime.Text).Add(new TimeSpan(0, 0, 0, 0, 100));
+            var newTime = txtInitialTime.Text.ToTimeSpan().Add(new TimeSpan(0, 0, 0, 0, 100));
 
-            txtInitialTime.Text = GetTimeSpanString(newTime);
+            txtInitialTime.Text = newTime.ToStringFormat();
         }
 
         private void buttonInicialTimeMenos_Click(object sender, EventArgs e)
@@ -274,9 +246,9 @@ namespace CortadorDeAudio
             if (string.IsNullOrEmpty(txtInitialTime.Text))
                 return;
 
-            var newTime = GetTimeSpanFromString(txtInitialTime.Text).Add(new TimeSpan(0, 0, 0, 0, -100));
+            var newTime = txtInitialTime.Text.ToTimeSpan().Add(new TimeSpan(0, 0, 0, 0, -100));
 
-            txtInitialTime.Text = GetTimeSpanString(newTime);
+            txtInitialTime.Text = newTime.ToStringFormat();
         }
 
         private void buttonFinalTimeMais_Click(object sender, EventArgs e)
@@ -284,9 +256,9 @@ namespace CortadorDeAudio
             if (string.IsNullOrEmpty(txtFinalTime.Text))
                 return;
 
-            var newTime = GetTimeSpanFromString(txtFinalTime.Text).Add(new TimeSpan(0, 0, 0, 0, 100));
+            var newTime = txtFinalTime.Text.ToTimeSpan().Add(new TimeSpan(0, 0, 0, 0, 100));
 
-            txtFinalTime.Text = GetTimeSpanString(newTime);
+            txtFinalTime.Text = newTime.ToStringFormat();
         }
 
         private void buttonFinalTimeMenos_Click(object sender, EventArgs e)
@@ -294,9 +266,9 @@ namespace CortadorDeAudio
             if (string.IsNullOrEmpty(txtFinalTime.Text))
                 return;
 
-            var newTime = GetTimeSpanFromString(txtFinalTime.Text).Add(new TimeSpan(0, 0, 0, 0, -100));
+            var newTime = txtFinalTime.Text.ToTimeSpan().Add(new TimeSpan(0, 0, 0, 0, -100));
 
-            txtFinalTime.Text = GetTimeSpanString(newTime);
+            txtFinalTime.Text = newTime.ToStringFormat(); ;
         }
 
         private void buttonExecuteInterval_Click(object sender, EventArgs e)
@@ -306,7 +278,7 @@ namespace CortadorDeAudio
             if (_intervalo == null)
                 throw new Exception("Não há linhas selecionadas!");
 
-            var initialTime = GetTimeSpanFromString(_intervalo.Inicio);
+            var initialTime = _intervalo.Inicio;
 
             _audioPlayer.SetMusicCurrentTime(initialTime);
         }
@@ -333,6 +305,24 @@ namespace CortadorDeAudio
             _intervalo = null;
 
             dataGridView.Refresh();
+        }
+
+        private void dataGridView_Enter(object sender, EventArgs e)
+        {
+            var intervalo = PegaIntervaloSelecionado();
+
+            if (intervalo == null)
+                return;
+
+            var posicaoInicial =
+                intervalo.Inicio.TotalMilliseconds / _audioPlayer.GetMusicTotalTime().TotalMilliseconds*progressBar.Height + progressBar.Location.X;
+
+           // inicialMark.Location.X = posicaoInicial;
+        }
+
+        private void dataGridView_Leave(object sender, EventArgs e)
+        {
+
         }
 
         //private void progressBar_MouseUp(object sender, MouseEventArgs e)

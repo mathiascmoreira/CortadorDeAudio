@@ -56,32 +56,37 @@
             this.arquivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.abrirArquivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonRemoveInterval = new System.Windows.Forms.Button();
+            this.inicialMark = new System.Windows.Forms.Label();
+            this.finalMark = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtInitialTime
             // 
-            this.txtInitialTime.Location = new System.Drawing.Point(105, 118);
+            this.txtInitialTime.Location = new System.Drawing.Point(79, 96);
+            this.txtInitialTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtInitialTime.Name = "txtInitialTime";
-            this.txtInitialTime.Size = new System.Drawing.Size(100, 22);
+            this.txtInitialTime.Size = new System.Drawing.Size(76, 20);
             this.txtInitialTime.TabIndex = 0;
             this.txtInitialTime.TextChanged += new System.EventHandler(this.txtInitialTime_TextChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 121);
+            this.label1.Location = new System.Drawing.Point(6, 98);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(71, 17);
+            this.label1.Size = new System.Drawing.Size(53, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "Cortar de:";
             // 
             // buttonPlay
             // 
-            this.buttonPlay.Location = new System.Drawing.Point(12, 74);
+            this.buttonPlay.Location = new System.Drawing.Point(9, 60);
+            this.buttonPlay.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonPlay.Name = "buttonPlay";
-            this.buttonPlay.Size = new System.Drawing.Size(30, 23);
+            this.buttonPlay.Size = new System.Drawing.Size(22, 19);
             this.buttonPlay.TabIndex = 4;
             this.buttonPlay.Text = "▶";
             this.buttonPlay.UseVisualStyleBackColor = true;
@@ -90,9 +95,10 @@
             // buttonPause
             // 
             this.buttonPause.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonPause.Location = new System.Drawing.Point(48, 74);
+            this.buttonPause.Location = new System.Drawing.Point(36, 60);
+            this.buttonPause.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonPause.Name = "buttonPause";
-            this.buttonPause.Size = new System.Drawing.Size(31, 23);
+            this.buttonPause.Size = new System.Drawing.Size(23, 19);
             this.buttonPause.TabIndex = 5;
             this.buttonPause.Text = "||";
             this.buttonPause.UseVisualStyleBackColor = true;
@@ -100,9 +106,10 @@
             // 
             // buttonStop
             // 
-            this.buttonStop.Location = new System.Drawing.Point(85, 74);
+            this.buttonStop.Location = new System.Drawing.Point(64, 60);
+            this.buttonStop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonStop.Name = "buttonStop";
-            this.buttonStop.Size = new System.Drawing.Size(31, 23);
+            this.buttonStop.Size = new System.Drawing.Size(23, 19);
             this.buttonStop.TabIndex = 6;
             this.buttonStop.Text = "■";
             this.buttonStop.UseVisualStyleBackColor = true;
@@ -110,16 +117,18 @@
             // 
             // progressBar
             // 
-            this.progressBar.Location = new System.Drawing.Point(12, 48);
+            this.progressBar.Location = new System.Drawing.Point(9, 39);
+            this.progressBar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(437, 11);
+            this.progressBar.Size = new System.Drawing.Size(328, 9);
             this.progressBar.TabIndex = 7;
             // 
             // buttonRetroceder
             // 
-            this.buttonRetroceder.Location = new System.Drawing.Point(122, 74);
+            this.buttonRetroceder.Location = new System.Drawing.Point(92, 60);
+            this.buttonRetroceder.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonRetroceder.Name = "buttonRetroceder";
-            this.buttonRetroceder.Size = new System.Drawing.Size(33, 23);
+            this.buttonRetroceder.Size = new System.Drawing.Size(25, 19);
             this.buttonRetroceder.TabIndex = 8;
             this.buttonRetroceder.Text = "<";
             this.buttonRetroceder.UseVisualStyleBackColor = true;
@@ -127,9 +136,10 @@
             // 
             // buttonInicialPosition
             // 
-            this.buttonInicialPosition.Location = new System.Drawing.Point(229, 118);
+            this.buttonInicialPosition.Location = new System.Drawing.Point(172, 96);
+            this.buttonInicialPosition.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonInicialPosition.Name = "buttonInicialPosition";
-            this.buttonInicialPosition.Size = new System.Drawing.Size(116, 23);
+            this.buttonInicialPosition.Size = new System.Drawing.Size(87, 19);
             this.buttonInicialPosition.TabIndex = 10;
             this.buttonInicialPosition.Text = "Posição Atual";
             this.buttonInicialPosition.UseVisualStyleBackColor = true;
@@ -138,17 +148,21 @@
             // dataGridView
             // 
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Location = new System.Drawing.Point(12, 265);
+            this.dataGridView.Location = new System.Drawing.Point(9, 215);
+            this.dataGridView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowTemplate.Height = 24;
-            this.dataGridView.Size = new System.Drawing.Size(437, 265);
+            this.dataGridView.Size = new System.Drawing.Size(328, 215);
             this.dataGridView.TabIndex = 11;
+            this.dataGridView.Enter += new System.EventHandler(this.dataGridView_Enter);
+            this.dataGridView.Leave += new System.EventHandler(this.dataGridView_Leave);
             // 
             // buttonAvancar
             // 
-            this.buttonAvancar.Location = new System.Drawing.Point(161, 74);
+            this.buttonAvancar.Location = new System.Drawing.Point(121, 60);
+            this.buttonAvancar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonAvancar.Name = "buttonAvancar";
-            this.buttonAvancar.Size = new System.Drawing.Size(33, 23);
+            this.buttonAvancar.Size = new System.Drawing.Size(25, 19);
             this.buttonAvancar.TabIndex = 14;
             this.buttonAvancar.Text = ">";
             this.buttonAvancar.UseVisualStyleBackColor = true;
@@ -157,17 +171,19 @@
             // timeLabel
             // 
             this.timeLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.timeLabel.Location = new System.Drawing.Point(284, 74);
+            this.timeLabel.Location = new System.Drawing.Point(213, 60);
+            this.timeLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.timeLabel.Name = "timeLabel";
-            this.timeLabel.Size = new System.Drawing.Size(165, 23);
+            this.timeLabel.Size = new System.Drawing.Size(124, 19);
             this.timeLabel.TabIndex = 15;
             this.timeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // buttonExecuteInterval
             // 
-            this.buttonExecuteInterval.Location = new System.Drawing.Point(11, 236);
+            this.buttonExecuteInterval.Location = new System.Drawing.Point(8, 192);
+            this.buttonExecuteInterval.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonExecuteInterval.Name = "buttonExecuteInterval";
-            this.buttonExecuteInterval.Size = new System.Drawing.Size(144, 23);
+            this.buttonExecuteInterval.Size = new System.Drawing.Size(108, 19);
             this.buttonExecuteInterval.TabIndex = 16;
             this.buttonExecuteInterval.Text = "Executar Intervalo";
             this.buttonExecuteInterval.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -176,9 +192,10 @@
             // 
             // buttonAddInterval
             // 
-            this.buttonAddInterval.Location = new System.Drawing.Point(351, 118);
+            this.buttonAddInterval.Location = new System.Drawing.Point(263, 96);
+            this.buttonAddInterval.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonAddInterval.Name = "buttonAddInterval";
-            this.buttonAddInterval.Size = new System.Drawing.Size(88, 62);
+            this.buttonAddInterval.Size = new System.Drawing.Size(66, 50);
             this.buttonAddInterval.TabIndex = 17;
             this.buttonAddInterval.Text = "Adicionar Intervalo";
             this.buttonAddInterval.UseVisualStyleBackColor = true;
@@ -187,9 +204,10 @@
             // buttonInicialTimeMenos
             // 
             this.buttonInicialTimeMenos.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonInicialTimeMenos.Location = new System.Drawing.Point(85, 118);
+            this.buttonInicialTimeMenos.Location = new System.Drawing.Point(64, 96);
+            this.buttonInicialTimeMenos.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonInicialTimeMenos.Name = "buttonInicialTimeMenos";
-            this.buttonInicialTimeMenos.Size = new System.Drawing.Size(19, 23);
+            this.buttonInicialTimeMenos.Size = new System.Drawing.Size(14, 19);
             this.buttonInicialTimeMenos.TabIndex = 18;
             this.buttonInicialTimeMenos.Text = "-";
             this.buttonInicialTimeMenos.UseVisualStyleBackColor = true;
@@ -198,9 +216,10 @@
             // buttonInicialTimeMais
             // 
             this.buttonInicialTimeMais.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonInicialTimeMais.Location = new System.Drawing.Point(209, 118);
+            this.buttonInicialTimeMais.Location = new System.Drawing.Point(157, 96);
+            this.buttonInicialTimeMais.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonInicialTimeMais.Name = "buttonInicialTimeMais";
-            this.buttonInicialTimeMais.Size = new System.Drawing.Size(19, 23);
+            this.buttonInicialTimeMais.Size = new System.Drawing.Size(14, 19);
             this.buttonInicialTimeMais.TabIndex = 19;
             this.buttonInicialTimeMais.Text = "+";
             this.buttonInicialTimeMais.UseVisualStyleBackColor = true;
@@ -209,9 +228,10 @@
             // buttonFinalTimeMais
             // 
             this.buttonFinalTimeMais.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonFinalTimeMais.Location = new System.Drawing.Point(209, 157);
+            this.buttonFinalTimeMais.Location = new System.Drawing.Point(157, 128);
+            this.buttonFinalTimeMais.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonFinalTimeMais.Name = "buttonFinalTimeMais";
-            this.buttonFinalTimeMais.Size = new System.Drawing.Size(19, 23);
+            this.buttonFinalTimeMais.Size = new System.Drawing.Size(14, 19);
             this.buttonFinalTimeMais.TabIndex = 24;
             this.buttonFinalTimeMais.Text = "+";
             this.buttonFinalTimeMais.UseVisualStyleBackColor = true;
@@ -220,9 +240,10 @@
             // buttonFinalTimeMenos
             // 
             this.buttonFinalTimeMenos.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonFinalTimeMenos.Location = new System.Drawing.Point(85, 157);
+            this.buttonFinalTimeMenos.Location = new System.Drawing.Point(64, 128);
+            this.buttonFinalTimeMenos.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonFinalTimeMenos.Name = "buttonFinalTimeMenos";
-            this.buttonFinalTimeMenos.Size = new System.Drawing.Size(19, 23);
+            this.buttonFinalTimeMenos.Size = new System.Drawing.Size(14, 19);
             this.buttonFinalTimeMenos.TabIndex = 23;
             this.buttonFinalTimeMenos.Text = "-";
             this.buttonFinalTimeMenos.UseVisualStyleBackColor = true;
@@ -230,9 +251,10 @@
             // 
             // buttonFinalPosition
             // 
-            this.buttonFinalPosition.Location = new System.Drawing.Point(229, 157);
+            this.buttonFinalPosition.Location = new System.Drawing.Point(172, 128);
+            this.buttonFinalPosition.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonFinalPosition.Name = "buttonFinalPosition";
-            this.buttonFinalPosition.Size = new System.Drawing.Size(116, 23);
+            this.buttonFinalPosition.Size = new System.Drawing.Size(87, 19);
             this.buttonFinalPosition.TabIndex = 22;
             this.buttonFinalPosition.Text = "Posição Atual";
             this.buttonFinalPosition.UseVisualStyleBackColor = true;
@@ -241,51 +263,57 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(8, 160);
+            this.label4.Location = new System.Drawing.Point(6, 130);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(33, 17);
+            this.label4.Size = new System.Drawing.Size(26, 13);
             this.label4.TabIndex = 21;
             this.label4.Text = "Até:";
             // 
             // txtFinalTime
             // 
-            this.txtFinalTime.Location = new System.Drawing.Point(105, 157);
+            this.txtFinalTime.Location = new System.Drawing.Point(79, 128);
+            this.txtFinalTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtFinalTime.Name = "txtFinalTime";
-            this.txtFinalTime.Size = new System.Drawing.Size(100, 22);
+            this.txtFinalTime.Size = new System.Drawing.Size(76, 20);
             this.txtFinalTime.TabIndex = 20;
             this.txtFinalTime.TextChanged += new System.EventHandler(this.txtFinalTime_TextChanged);
             // 
             // button14
             // 
-            this.button14.Location = new System.Drawing.Point(138, 536);
+            this.button14.Location = new System.Drawing.Point(104, 436);
+            this.button14.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(131, 23);
+            this.button14.Size = new System.Drawing.Size(98, 19);
             this.button14.TabIndex = 25;
             this.button14.Text = "Salvar Intervalos";
             this.button14.UseVisualStyleBackColor = true;
             // 
             // button15
             // 
-            this.button15.Location = new System.Drawing.Point(12, 536);
+            this.button15.Location = new System.Drawing.Point(9, 436);
+            this.button15.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(120, 23);
+            this.button15.Size = new System.Drawing.Size(90, 19);
             this.button15.TabIndex = 26;
             this.button15.Text = "Cortar Audio";
             this.button15.UseVisualStyleBackColor = true;
             // 
             // txtTamanhoDoIntervalo
             // 
-            this.txtTamanhoDoIntervalo.Location = new System.Drawing.Point(164, 195);
+            this.txtTamanhoDoIntervalo.Location = new System.Drawing.Point(123, 158);
+            this.txtTamanhoDoIntervalo.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtTamanhoDoIntervalo.Name = "txtTamanhoDoIntervalo";
-            this.txtTamanhoDoIntervalo.Size = new System.Drawing.Size(100, 22);
+            this.txtTamanhoDoIntervalo.Size = new System.Drawing.Size(76, 20);
             this.txtTamanhoDoIntervalo.TabIndex = 27;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 198);
+            this.label2.Location = new System.Drawing.Point(6, 161);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(150, 17);
+            this.label2.Size = new System.Drawing.Size(114, 13);
             this.label2.TabIndex = 28;
             this.label2.Text = "Tamanho do Intervalo:";
             // 
@@ -296,7 +324,8 @@
             this.arquivoToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(464, 28);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(348, 24);
             this.menuStrip1.TabIndex = 29;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -305,32 +334,51 @@
             this.arquivoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.abrirArquivoToolStripMenuItem});
             this.arquivoToolStripMenuItem.Name = "arquivoToolStripMenuItem";
-            this.arquivoToolStripMenuItem.Size = new System.Drawing.Size(73, 24);
+            this.arquivoToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.arquivoToolStripMenuItem.Text = "Arquivo";
             // 
             // abrirArquivoToolStripMenuItem
             // 
             this.abrirArquivoToolStripMenuItem.Name = "abrirArquivoToolStripMenuItem";
-            this.abrirArquivoToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
+            this.abrirArquivoToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
             this.abrirArquivoToolStripMenuItem.Text = "Abrir Arquivo";
             this.abrirArquivoToolStripMenuItem.Click += new System.EventHandler(this.StripMenuItemOpen_Click);
             // 
             // buttonRemoveInterval
             // 
-            this.buttonRemoveInterval.Location = new System.Drawing.Point(164, 236);
+            this.buttonRemoveInterval.Location = new System.Drawing.Point(123, 192);
+            this.buttonRemoveInterval.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonRemoveInterval.Name = "buttonRemoveInterval";
-            this.buttonRemoveInterval.Size = new System.Drawing.Size(136, 23);
+            this.buttonRemoveInterval.Size = new System.Drawing.Size(102, 19);
             this.buttonRemoveInterval.TabIndex = 30;
             this.buttonRemoveInterval.Text = "Remover Intervalo";
             this.buttonRemoveInterval.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonRemoveInterval.UseVisualStyleBackColor = true;
             this.buttonRemoveInterval.Click += new System.EventHandler(this.buttonRemoveInterval_Click);
             // 
+            // inicialMark
+            // 
+            this.inicialMark.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.inicialMark.Location = new System.Drawing.Point(12, 24);
+            this.inicialMark.Name = "inicialMark";
+            this.inicialMark.Size = new System.Drawing.Size(2, 10);
+            this.inicialMark.TabIndex = 31;
+            // 
+            // finalMark
+            // 
+            this.finalMark.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.finalMark.Location = new System.Drawing.Point(20, 24);
+            this.finalMark.Name = "finalMark";
+            this.finalMark.Size = new System.Drawing.Size(2, 10);
+            this.finalMark.TabIndex = 32;
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(464, 571);
+            this.ClientSize = new System.Drawing.Size(348, 464);
+            this.Controls.Add(this.finalMark);
+            this.Controls.Add(this.inicialMark);
             this.Controls.Add(this.buttonRemoveInterval);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txtTamanhoDoIntervalo);
@@ -357,6 +405,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtInitialTime);
             this.Controls.Add(this.menuStrip1);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "Form1";
             this.Text = "Cortador de Audio";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
@@ -397,6 +446,8 @@
         private System.Windows.Forms.ToolStripMenuItem arquivoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem abrirArquivoToolStripMenuItem;
         private System.Windows.Forms.Button buttonRemoveInterval;
+        private System.Windows.Forms.Label inicialMark;
+        private System.Windows.Forms.Label finalMark;
     }
 }
 
