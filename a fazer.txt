@@ -1,0 +1,5 @@
+a fazer:
+-> quando clicar na grid setar o intervalo selecionado nos text boxs
+-> quando clicar em incrementar ou decrementar o intervalo executar o audio logo apos a alteracao
+-> a clicar em incrementar ou decrementar, avanca ou retroceder etc e segurar incrementar os valores de forma continua
+-> executar intervalo os clicar duas vezes sobre ele
