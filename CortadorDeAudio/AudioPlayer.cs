@@ -102,6 +102,22 @@ namespace CortadorDeAudio
             PlayerStatus = PlayerStatus.Stopped;
         }
 
+        public void StepAhead(short milliseconds)
+        {
+            if (!MusicLoaded)
+                return;
+
+            audioFileReader.CurrentTime = audioFileReader.CurrentTime + new TimeSpan(0, 0, 0, 0, milliseconds);
+        }
+
+        public void StepBack(short milliseconds)
+        {
+            if (!MusicLoaded)
+                return;
+
+            audioFileReader.CurrentTime = audioFileReader.CurrentTime - new TimeSpan(0, 0, 0, 0, milliseconds);
+        }
+
         public TimeSpan GetMusicTotalTime()
         {
             return audioFileReader?.TotalTime ?? TimeSpan.Zero;
@@ -112,109 +128,12 @@ namespace CortadorDeAudio
             return audioFileReader?.CurrentTime ?? TimeSpan.Zero;
         }
 
-        public void DecreaseSpeed()
+        public void SetMusicCurrentTime(TimeSpan time)
         {
-            throw new NotImplementedException();
-        }
+            if (!MusicLoaded)
+                return;
 
-        public void DecreaseVolume()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteAllMarkedPositions()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteAllSelections()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteCurrentSelection()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void EndSelection()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void IncreaseSpeed()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void IncreaseVolume()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void MarkPosition()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void NextMarkedPosition(bool pause = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void NextMusic()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void NextSelection(bool pause = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PreviousMarkedPosition(bool pause = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PreviousMusic()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PreviousSelection(bool pause = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SaveSelectionsAsSeparateFiles()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SelectBetweenTwoMarkedPosition()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetSpeed(decimal speed)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void StartSelection()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UnSelectAllSelections()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UnselectCurrentSelection()
-        {
-            throw new NotImplementedException();
+            audioFileReader.CurrentTime = time;
         }
     }
 }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CortadorDeAudio
 {
@@ -20,37 +16,12 @@ namespace CortadorDeAudio
         void Stop();
         void Restart();
 
-        void IncreaseVolume();
-        void DecreaseVolume();
-
-        void IncreaseSpeed();
-        void DecreaseSpeed();
-
-        void SetSpeed(decimal speed);
-
+        void StepAhead(short milliseconds);
+        void StepBack(short milliseconds);
         TimeSpan GetMusicTotalTime();
         TimeSpan GetMusicCurrentTime();
+        void SetMusicCurrentTime(TimeSpan time);
 
-        void NextMusic();
-        void PreviousMusic();
-
-        void MarkPosition();
-        void NextMarkedPosition(bool pause = false);
-        void PreviousMarkedPosition(bool pause = false);
-        void DeleteAllMarkedPositions();
-
-        void StartSelection();
-        void EndSelection();
-        void NextSelection(bool pause = false);
-        void PreviousSelection(bool pause = false);
-
-        void SelectBetweenTwoMarkedPosition();
-        void UnselectCurrentSelection();
-        void UnSelectAllSelections();
-        void DeleteCurrentSelection();
-        void DeleteAllSelections();
-
-        void SaveSelectionsAsSeparateFiles();
 
         event EventHandler OnPlayerEnds;
     }

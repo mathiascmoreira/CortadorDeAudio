@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
 using System.Timers;
 using System.Windows.Forms;
 
@@ -8,16 +10,17 @@ namespace CortadorDeAudio
     public partial class Form1 : Form
     {
         private readonly IAudioPlayer _audioPlayer;
-        private System.Timers.Timer _timer;        
+        private System.Timers.Timer _timer;
         private BindingList<Intervalo> _intervalos;
-        
+        private Intervalo _intervalo;
+
         public Form1()
         {
             InitializeComponent();
 
             _audioPlayer = new AudioPlayer();
             progressBar.Maximum = 1000;
-            _intervalos = new BindingList<Intervalo>();          
+            _intervalos = new BindingList<Intervalo>();
 
             dataGridView.DataSource = _intervalos;
 
@@ -67,6 +70,8 @@ namespace CortadorDeAudio
             CheckTimer();
 
             progressBar.Value = 0;
+
+            _intervalo = null;
         }
 
         private void buttonInicialPosition_Click(object sender, EventArgs e)
@@ -93,7 +98,7 @@ namespace CortadorDeAudio
                 if (string.IsNullOrEmpty(txtFinalTime.Text))
                     throw new Exception("Selecione um tempo final!");
 
-                if(GetTimeSpanFromString(txtInitialTime.Text) >= GetTimeSpanFromString(txtFinalTime.Text))
+                if (GetTimeSpanFromString(txtInitialTime.Text) >= GetTimeSpanFromString(txtFinalTime.Text))
                     throw new Exception("Tempo final deve ser maior que o inicial!");
 
                 _intervalos.Add(new Intervalo(txtInitialTime.Text, txtFinalTime.Text));
@@ -106,7 +111,11 @@ namespace CortadorDeAudio
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            var playerPosition = _audioPlayer.GetPosition();
+
+            if (_intervalo != null && _audioPlayer.GetMusicCurrentTime() > GetTimeSpanFromString(_intervalo.Final))
+            {
+                _audioPlayer.SetMusicCurrentTime(GetTimeSpanFromString(_intervalo.Inicio));
+            }
 
             var progressBarPosition = Convert.ToInt32(decimal.Floor(_audioPlayer.GetPosition() * progressBar.Maximum));
 
@@ -145,7 +154,7 @@ namespace CortadorDeAudio
 
                     Text = theDialog.FileName;
 
-                    _intervalos.Clear();               
+                    _intervalos.Clear();
                 }
             }
             catch (Exception ex)
@@ -207,11 +216,27 @@ namespace CortadorDeAudio
         private void txtInitialTime_TextChanged(object sender, EventArgs e)
         {
             UpdateTamanhoDoIntervalo();
-        }       
+
+            var intervalo = PegaIntervaloSelecionado();
+
+            if (intervalo != null)
+            {
+                intervalo.Inicio = txtInitialTime.Text;
+                dataGridView.Refresh();
+            }
+        }
 
         private void txtFinalTime_TextChanged(object sender, EventArgs e)
         {
             UpdateTamanhoDoIntervalo();
+
+            var intervalo = PegaIntervaloSelecionado();
+
+            if (intervalo != null)
+            {
+                intervalo.Final = txtFinalTime.Text;
+                dataGridView.Refresh();
+            }
         }
 
         private void UpdateTamanhoDoIntervalo()
@@ -226,14 +251,89 @@ namespace CortadorDeAudio
 
         private void buttonAvancar_Click(object sender, EventArgs e)
         {
-
+            _audioPlayer.StepAhead(3000);
         }
 
         private void buttonRetroceder_Click(object sender, EventArgs e)
         {
-
+            _audioPlayer.StepBack(3000);
         }
 
+        private void buttonInicialTimeMais_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtInitialTime.Text))
+                return;
+
+            var newTime = GetTimeSpanFromString(txtInitialTime.Text).Add(new TimeSpan(0, 0, 0, 0, 100));
+
+            txtInitialTime.Text = GetTimeSpanString(newTime);
+        }
+
+        private void buttonInicialTimeMenos_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtInitialTime.Text))
+                return;
+
+            var newTime = GetTimeSpanFromString(txtInitialTime.Text).Add(new TimeSpan(0, 0, 0, 0, -100));
+
+            txtInitialTime.Text = GetTimeSpanString(newTime);
+        }
+
+        private void buttonFinalTimeMais_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtFinalTime.Text))
+                return;
+
+            var newTime = GetTimeSpanFromString(txtFinalTime.Text).Add(new TimeSpan(0, 0, 0, 0, 100));
+
+            txtFinalTime.Text = GetTimeSpanString(newTime);
+        }
+
+        private void buttonFinalTimeMenos_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtFinalTime.Text))
+                return;
+
+            var newTime = GetTimeSpanFromString(txtFinalTime.Text).Add(new TimeSpan(0, 0, 0, 0, -100));
+
+            txtFinalTime.Text = GetTimeSpanString(newTime);
+        }
+
+        private void buttonExecuteInterval_Click(object sender, EventArgs e)
+        {
+            _intervalo = PegaIntervaloSelecionado();
+
+            if (_intervalo == null)
+                throw new Exception("Não há linhas selecionadas!");
+
+            var initialTime = GetTimeSpanFromString(_intervalo.Inicio);
+
+            _audioPlayer.SetMusicCurrentTime(initialTime);
+        }
+
+        private Intervalo PegaIntervaloSelecionado()
+        {
+            var currentRowIndex = dataGridView.CurrentRow?.Index ?? -1;
+
+            if (currentRowIndex < 0)
+                return null;
+
+            return _intervalos[currentRowIndex];
+        }
+
+        private void buttonRemoveInterval_Click(object sender, EventArgs e)
+        {
+            var intervalo = PegaIntervaloSelecionado();
+
+            if (intervalo == null)
+                throw new Exception("Selecione uma linha!");
+
+            _intervalos.Remove(intervalo);
+
+            _intervalo = null;
+
+            dataGridView.Refresh();
+        }
 
         //private void progressBar_MouseUp(object sender, MouseEventArgs e)
         //{

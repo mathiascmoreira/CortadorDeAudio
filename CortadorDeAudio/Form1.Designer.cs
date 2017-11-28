@@ -39,12 +39,12 @@
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.buttonAvancar = new System.Windows.Forms.Button();
             this.timeLabel = new System.Windows.Forms.Label();
-            this.button5 = new System.Windows.Forms.Button();
+            this.buttonExecuteInterval = new System.Windows.Forms.Button();
             this.buttonAddInterval = new System.Windows.Forms.Button();
-            this.button10 = new System.Windows.Forms.Button();
-            this.button11 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
-            this.button12 = new System.Windows.Forms.Button();
+            this.buttonInicialTimeMenos = new System.Windows.Forms.Button();
+            this.buttonInicialTimeMais = new System.Windows.Forms.Button();
+            this.buttonFinalTimeMais = new System.Windows.Forms.Button();
+            this.buttonFinalTimeMenos = new System.Windows.Forms.Button();
             this.buttonFinalPosition = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.txtFinalTime = new System.Windows.Forms.TextBox();
@@ -55,7 +55,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.arquivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.abrirArquivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.configuraçõesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonRemoveInterval = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -79,7 +79,7 @@
             // 
             // buttonPlay
             // 
-            this.buttonPlay.Location = new System.Drawing.Point(12, 65);
+            this.buttonPlay.Location = new System.Drawing.Point(12, 74);
             this.buttonPlay.Name = "buttonPlay";
             this.buttonPlay.Size = new System.Drawing.Size(30, 23);
             this.buttonPlay.TabIndex = 4;
@@ -90,7 +90,7 @@
             // buttonPause
             // 
             this.buttonPause.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonPause.Location = new System.Drawing.Point(48, 65);
+            this.buttonPause.Location = new System.Drawing.Point(48, 74);
             this.buttonPause.Name = "buttonPause";
             this.buttonPause.Size = new System.Drawing.Size(31, 23);
             this.buttonPause.TabIndex = 5;
@@ -100,7 +100,7 @@
             // 
             // buttonStop
             // 
-            this.buttonStop.Location = new System.Drawing.Point(85, 65);
+            this.buttonStop.Location = new System.Drawing.Point(85, 74);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(31, 23);
             this.buttonStop.TabIndex = 6;
@@ -110,14 +110,14 @@
             // 
             // progressBar
             // 
-            this.progressBar.Location = new System.Drawing.Point(12, 39);
+            this.progressBar.Location = new System.Drawing.Point(12, 48);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(437, 11);
             this.progressBar.TabIndex = 7;
             // 
             // buttonRetroceder
             // 
-            this.buttonRetroceder.Location = new System.Drawing.Point(122, 65);
+            this.buttonRetroceder.Location = new System.Drawing.Point(122, 74);
             this.buttonRetroceder.Name = "buttonRetroceder";
             this.buttonRetroceder.Size = new System.Drawing.Size(33, 23);
             this.buttonRetroceder.TabIndex = 8;
@@ -146,7 +146,7 @@
             // 
             // buttonAvancar
             // 
-            this.buttonAvancar.Location = new System.Drawing.Point(161, 65);
+            this.buttonAvancar.Location = new System.Drawing.Point(161, 74);
             this.buttonAvancar.Name = "buttonAvancar";
             this.buttonAvancar.Size = new System.Drawing.Size(33, 23);
             this.buttonAvancar.TabIndex = 14;
@@ -157,72 +157,76 @@
             // timeLabel
             // 
             this.timeLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.timeLabel.Location = new System.Drawing.Point(284, 65);
+            this.timeLabel.Location = new System.Drawing.Point(284, 74);
             this.timeLabel.Name = "timeLabel";
             this.timeLabel.Size = new System.Drawing.Size(165, 23);
             this.timeLabel.TabIndex = 15;
             this.timeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // button5
+            // buttonExecuteInterval
             // 
-            this.button5.Location = new System.Drawing.Point(11, 236);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(144, 23);
-            this.button5.TabIndex = 16;
-            this.button5.Text = "Executar Intervalo";
-            this.button5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button5.UseVisualStyleBackColor = true;
+            this.buttonExecuteInterval.Location = new System.Drawing.Point(11, 236);
+            this.buttonExecuteInterval.Name = "buttonExecuteInterval";
+            this.buttonExecuteInterval.Size = new System.Drawing.Size(144, 23);
+            this.buttonExecuteInterval.TabIndex = 16;
+            this.buttonExecuteInterval.Text = "Executar Intervalo";
+            this.buttonExecuteInterval.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonExecuteInterval.UseVisualStyleBackColor = true;
+            this.buttonExecuteInterval.Click += new System.EventHandler(this.buttonExecuteInterval_Click);
             // 
             // buttonAddInterval
             // 
-            this.buttonAddInterval.Location = new System.Drawing.Point(164, 236);
+            this.buttonAddInterval.Location = new System.Drawing.Point(351, 118);
             this.buttonAddInterval.Name = "buttonAddInterval";
-            this.buttonAddInterval.Size = new System.Drawing.Size(120, 23);
+            this.buttonAddInterval.Size = new System.Drawing.Size(88, 62);
             this.buttonAddInterval.TabIndex = 17;
-            this.buttonAddInterval.Text = "Salvar Intervalo";
-            this.buttonAddInterval.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonAddInterval.Text = "Adicionar Intervalo";
             this.buttonAddInterval.UseVisualStyleBackColor = true;
             this.buttonAddInterval.Click += new System.EventHandler(this.buttonAddInterval_Click);
             // 
-            // button10
+            // buttonInicialTimeMenos
             // 
-            this.button10.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button10.Location = new System.Drawing.Point(85, 118);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(19, 23);
-            this.button10.TabIndex = 18;
-            this.button10.Text = "-";
-            this.button10.UseVisualStyleBackColor = true;
+            this.buttonInicialTimeMenos.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonInicialTimeMenos.Location = new System.Drawing.Point(85, 118);
+            this.buttonInicialTimeMenos.Name = "buttonInicialTimeMenos";
+            this.buttonInicialTimeMenos.Size = new System.Drawing.Size(19, 23);
+            this.buttonInicialTimeMenos.TabIndex = 18;
+            this.buttonInicialTimeMenos.Text = "-";
+            this.buttonInicialTimeMenos.UseVisualStyleBackColor = true;
+            this.buttonInicialTimeMenos.Click += new System.EventHandler(this.buttonInicialTimeMenos_Click);
             // 
-            // button11
+            // buttonInicialTimeMais
             // 
-            this.button11.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button11.Location = new System.Drawing.Point(209, 118);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(19, 23);
-            this.button11.TabIndex = 19;
-            this.button11.Text = "+";
-            this.button11.UseVisualStyleBackColor = true;
+            this.buttonInicialTimeMais.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonInicialTimeMais.Location = new System.Drawing.Point(209, 118);
+            this.buttonInicialTimeMais.Name = "buttonInicialTimeMais";
+            this.buttonInicialTimeMais.Size = new System.Drawing.Size(19, 23);
+            this.buttonInicialTimeMais.TabIndex = 19;
+            this.buttonInicialTimeMais.Text = "+";
+            this.buttonInicialTimeMais.UseVisualStyleBackColor = true;
+            this.buttonInicialTimeMais.Click += new System.EventHandler(this.buttonInicialTimeMais_Click);
             // 
-            // button8
+            // buttonFinalTimeMais
             // 
-            this.button8.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button8.Location = new System.Drawing.Point(209, 157);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(19, 23);
-            this.button8.TabIndex = 24;
-            this.button8.Text = "+";
-            this.button8.UseVisualStyleBackColor = true;
+            this.buttonFinalTimeMais.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonFinalTimeMais.Location = new System.Drawing.Point(209, 157);
+            this.buttonFinalTimeMais.Name = "buttonFinalTimeMais";
+            this.buttonFinalTimeMais.Size = new System.Drawing.Size(19, 23);
+            this.buttonFinalTimeMais.TabIndex = 24;
+            this.buttonFinalTimeMais.Text = "+";
+            this.buttonFinalTimeMais.UseVisualStyleBackColor = true;
+            this.buttonFinalTimeMais.Click += new System.EventHandler(this.buttonFinalTimeMais_Click);
             // 
-            // button12
+            // buttonFinalTimeMenos
             // 
-            this.button12.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button12.Location = new System.Drawing.Point(85, 157);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(19, 23);
-            this.button12.TabIndex = 23;
-            this.button12.Text = "-";
-            this.button12.UseVisualStyleBackColor = true;
+            this.buttonFinalTimeMenos.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonFinalTimeMenos.Location = new System.Drawing.Point(85, 157);
+            this.buttonFinalTimeMenos.Name = "buttonFinalTimeMenos";
+            this.buttonFinalTimeMenos.Size = new System.Drawing.Size(19, 23);
+            this.buttonFinalTimeMenos.TabIndex = 23;
+            this.buttonFinalTimeMenos.Text = "-";
+            this.buttonFinalTimeMenos.UseVisualStyleBackColor = true;
+            this.buttonFinalTimeMenos.Click += new System.EventHandler(this.buttonFinalTimeMenos_Click);
             // 
             // buttonFinalPosition
             // 
@@ -289,8 +293,7 @@
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.arquivoToolStripMenuItem,
-            this.configuraçõesToolStripMenuItem});
+            this.arquivoToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(464, 28);
@@ -312,30 +315,36 @@
             this.abrirArquivoToolStripMenuItem.Text = "Abrir Arquivo";
             this.abrirArquivoToolStripMenuItem.Click += new System.EventHandler(this.StripMenuItemOpen_Click);
             // 
-            // configuraçõesToolStripMenuItem
+            // buttonRemoveInterval
             // 
-            this.configuraçõesToolStripMenuItem.Name = "configuraçõesToolStripMenuItem";
-            this.configuraçõesToolStripMenuItem.Size = new System.Drawing.Size(116, 24);
-            this.configuraçõesToolStripMenuItem.Text = "Configurações";
+            this.buttonRemoveInterval.Location = new System.Drawing.Point(164, 236);
+            this.buttonRemoveInterval.Name = "buttonRemoveInterval";
+            this.buttonRemoveInterval.Size = new System.Drawing.Size(136, 23);
+            this.buttonRemoveInterval.TabIndex = 30;
+            this.buttonRemoveInterval.Text = "Remover Intervalo";
+            this.buttonRemoveInterval.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonRemoveInterval.UseVisualStyleBackColor = true;
+            this.buttonRemoveInterval.Click += new System.EventHandler(this.buttonRemoveInterval_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(464, 571);
+            this.Controls.Add(this.buttonRemoveInterval);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txtTamanhoDoIntervalo);
             this.Controls.Add(this.button15);
             this.Controls.Add(this.button14);
-            this.Controls.Add(this.button8);
-            this.Controls.Add(this.button12);
+            this.Controls.Add(this.buttonFinalTimeMais);
+            this.Controls.Add(this.buttonFinalTimeMenos);
             this.Controls.Add(this.buttonFinalPosition);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txtFinalTime);
-            this.Controls.Add(this.button11);
-            this.Controls.Add(this.button10);
+            this.Controls.Add(this.buttonInicialTimeMais);
+            this.Controls.Add(this.buttonInicialTimeMenos);
             this.Controls.Add(this.buttonAddInterval);
-            this.Controls.Add(this.button5);
+            this.Controls.Add(this.buttonExecuteInterval);
             this.Controls.Add(this.timeLabel);
             this.Controls.Add(this.buttonAvancar);
             this.Controls.Add(this.dataGridView);
@@ -371,12 +380,12 @@
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.Button buttonAvancar;
         private System.Windows.Forms.Label timeLabel;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button buttonExecuteInterval;
         private System.Windows.Forms.Button buttonAddInterval;
-        private System.Windows.Forms.Button button10;
-        private System.Windows.Forms.Button button11;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Button buttonInicialTimeMenos;
+        private System.Windows.Forms.Button buttonInicialTimeMais;
+        private System.Windows.Forms.Button buttonFinalTimeMais;
+        private System.Windows.Forms.Button buttonFinalTimeMenos;
         private System.Windows.Forms.Button buttonFinalPosition;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtFinalTime;
@@ -387,7 +396,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem arquivoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem abrirArquivoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem configuraçõesToolStripMenuItem;
+        private System.Windows.Forms.Button buttonRemoveInterval;
     }
 }
 
