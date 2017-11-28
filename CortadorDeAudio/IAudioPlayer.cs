@@ -8,6 +8,8 @@ namespace CortadorDeAudio
 
         void LoadMusic(string path);
 
+        bool MusicLoaded { get; set; }
+
         void SetPosition(decimal position);
         decimal GetPosition();
 

@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Timers;
 using System.Windows.Forms;
 
@@ -34,8 +35,11 @@ namespace CortadorDeAudio
 
         private void FormatGrid()
         {
-            dataGridView.Columns["Inicio"].DefaultCellStyle.Format = "mm':'ss':'ffff";
-            dataGridView.Columns["Final"].DefaultCellStyle.Format = "mm':'ss':'ffff";
+            const string intervaloInicioColumn = "Inicio";
+            const string intervaloFinalColumn = "Final";
+
+            dataGridView.Columns[intervaloInicioColumn].DefaultCellStyle.Format = "mm':'ss':'ffff";
+            dataGridView.Columns[intervaloFinalColumn].DefaultCellStyle.Format = "mm':'ss':'ffff";
         }
 
         private void SetTimer()
@@ -148,29 +152,7 @@ namespace CortadorDeAudio
             }
         }
 
-        private void StripMenuItemOpen_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                var theDialog = new OpenFileDialog
-                {
-                    Title = "Select a MP3 file",
-                    Filter = "MP3 files|*.mp3"
-                };
-                if (theDialog.ShowDialog() == DialogResult.OK)
-                {
-                    _audioPlayer.LoadMusic(theDialog.FileName);
 
-                    Text = theDialog.FileName;
-
-                    _intervalos.Clear();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao carregar o arquivo!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
 
         public string GetTimeLabelText()
         {
@@ -273,11 +255,17 @@ namespace CortadorDeAudio
 
         private void buttonExecuteInterval_Click(object sender, EventArgs e)
         {
+            if (!_audioPlayer.MusicLoaded)
+                return;
+
             _intervalo = PegaIntervaloSelecionado();
 
             if (_intervalo == null)
                 throw new Exception("Não há linhas selecionadas!");
 
+            if(_intervalo.Inicio >= _audioPlayer.GetMusicTotalTime() || _intervalo.Final >= _audioPlayer.GetMusicTotalTime())
+                throw new Exception("Intervalo selecionado não esta contido no audio selecionado!");
+            
             var initialTime = _intervalo.Inicio;
 
             _audioPlayer.SetMusicCurrentTime(initialTime);
@@ -307,62 +295,91 @@ namespace CortadorDeAudio
             dataGridView.Refresh();
         }
 
-        private void dataGridView_Enter(object sender, EventArgs e)
+        private void StripMenuItemOpen_Click(object sender, EventArgs e)
         {
-            var intervalo = PegaIntervaloSelecionado();
+            var theDialog = new OpenFileDialog
+            {
+                Title = "Select a MP3 file",
+                Filter = "MP3 files|*.mp3"
+            };
+            if (theDialog.ShowDialog() != DialogResult.OK) return;
 
-            if (intervalo == null)
-                return;
+            try
+            {
+                _audioPlayer.LoadMusic(theDialog.FileName);
 
-            var posicaoInicial =
-                intervalo.Inicio.TotalMilliseconds / _audioPlayer.GetMusicTotalTime().TotalMilliseconds*progressBar.Height + progressBar.Location.X;
+                Text = theDialog.FileName;
 
-           // inicialMark.Location.X = posicaoInicial;
+                _intervalos.Clear();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Erro ao carregar o arquivo!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private void dataGridView_Leave(object sender, EventArgs e)
+        private void buttonSaveIntervals_Click(object sender, EventArgs e)
         {
+            if (!_intervalos.Any())
+                throw new Exception("Nao há intervalos adicionados!");
 
+            var fileBuilder = new StringBuilder();
+
+            var folderBrowser = new SaveFileDialog
+            {
+                Title = "Selecione um local para salvar o arquivo.",
+                Filter = "txt files|*.txt"
+            };
+
+            if (folderBrowser.ShowDialog() != DialogResult.OK) return;
+
+            try
+            {
+                foreach (var intervalo in _intervalos)
+                {
+                    fileBuilder.Append($"{intervalo.Inicio.ToStringFormat()}; {intervalo.Final.ToStringFormat()}");
+                }
+
+                File.WriteAllText(folderBrowser.FileName, fileBuilder.ToString());
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Erro ao salvar o arquivo!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        //private void progressBar_MouseUp(object sender, MouseEventArgs e)
-        //{
-        //    if (e.Button != MouseButtons.Left)
-        //        return;
+        private void carregarIntervalosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var theDialog = new OpenFileDialog
+            {
+                Title = "Selecione o arquivo com os intervalos",
+                Filter = "txt files|*.txt"
+            };
 
-        //    var seekerBarPosition = Convert.ToDecimal(progressBar.Value) / Convert.ToDecimal(progressBar.Maximum);
+            if (theDialog.ShowDialog() != DialogResult.OK) return;
 
-        //    _audioPlayer.SetPosition(seekerBarPosition);
+            try
+            {
+                var filelines = File.ReadAllLines(theDialog.FileName);
 
-        //    stopSeek = false;
-        //}
+                var newIntervals = new List<Intervalo>();
 
-        //private void progressBar(object sender, MouseEventArgs e)
-        //{
-        //    if (e.Button != MouseButtons.Left)
-        //        return;
+                foreach (var line in filelines)
+                {
+                    var lineSplitted = line.Split(';');
 
-        //    stopSeek = true;
-        //}
+                    newIntervals.Add(new Intervalo(lineSplitted[0].ToTimeSpan(), lineSplitted[1].ToTimeSpan()));
+                }
 
-        //private void progressBar_KeyUp(object sender, KeyEventArgs e)
-        //{
-        //    if (e.KeyCode != Keys.Left && e.KeyCode != Keys.Right)
-        //        return;
-
-        //    var seekerBarPosition = Convert.ToDecimal(progressBar.Value) / Convert.ToDecimal(SeekerTrackBar.Maximum);
-
-        //    _audioPlayer.SetPosition(seekerBarPosition);
-
-        //    stopSeek = false;
-        //}
-
-        //private void SeekerTrackBar_KeyDown(object sender, KeyEventArgs e)
-        //{
-        //    if (e.KeyCode != Keys.Left && e.KeyCode != Keys.Right)
-        //        return;
-
-        //    stopSeek = true;
-        //}
+                foreach (var newInterval in newIntervals)
+                {
+                    _intervalos.Add(newInterval);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar o arquivo!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

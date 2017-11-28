@@ -18,7 +18,7 @@ namespace CortadorDeAudio
 
         public static TimeSpan ToTimeSpan(this string time)
         {
-            return TimeSpan.ParseExact(time, stringFormat, CultureInfo.InvariantCulture);
+            return TimeSpan.ParseExact(time.Trim(), stringFormat, CultureInfo.InvariantCulture);
         }
     }
 }

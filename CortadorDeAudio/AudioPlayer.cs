@@ -9,7 +9,7 @@ namespace CortadorDeAudio
         private IWavePlayer wavePlayer;
         private AudioFileReader audioFileReader;      
 
-        private bool MusicLoaded { get; set; }
+        public bool MusicLoaded { get; set; }
 
         public void SetPosition(decimal position)
         {
