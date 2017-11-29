@@ -105,14 +105,7 @@ namespace CortadorDeAudio
         {
             try
             {
-                if (string.IsNullOrEmpty(txtInitialTime.Text))
-                    throw new Exception("Selecione um tempo inicial!");
-
-                if (string.IsNullOrEmpty(txtFinalTime.Text))
-                    throw new Exception("Selecione um tempo final!");
-
-                if (txtInitialTime.Text.ToTimeSpan() >= txtFinalTime.Text.ToTimeSpan())
-                    throw new Exception("Tempo final deve ser maior que o inicial!");
+                ValidaIntervaloDaTela();
 
                 _intervalos.Add(new Intervalo(txtInitialTime.Text.ToTimeSpan(), txtFinalTime.Text.ToTimeSpan()));
             }
@@ -120,6 +113,30 @@ namespace CortadorDeAudio
             {
                 MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void buttonUpdateInterval_Click(object sender, EventArgs e)
+        {
+            ValidaIntervaloDaTela();
+
+            var intervalo = PegaIntervaloSelecionado();
+
+            intervalo.Inicio = txtInitialTime.Text.ToTimeSpan();
+            intervalo.Final = txtFinalTime.Text.ToTimeSpan();
+
+            dataGridView.Refresh();
+        }
+
+        private void ValidaIntervaloDaTela()
+        {
+            if (string.IsNullOrEmpty(txtInitialTime.Text))
+                throw new Exception("Selecione um tempo inicial!");
+
+            if (string.IsNullOrEmpty(txtFinalTime.Text))
+                throw new Exception("Selecione um tempo final!");
+
+            if (txtInitialTime.Text.ToTimeSpan() >= txtFinalTime.Text.ToTimeSpan())
+                throw new Exception("Tempo final deve ser maior que o inicial!");
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -152,8 +169,6 @@ namespace CortadorDeAudio
             }
         }
 
-
-
         public string GetTimeLabelText()
         {
             return $"{_audioPlayer.GetMusicCurrentTime().ToStringFormat()}/{_audioPlayer.GetMusicTotalTime().ToStringFormat()}";
@@ -165,32 +180,6 @@ namespace CortadorDeAudio
                 _timer.Start();
             else
                 _timer.Stop();
-        }
-
-        private void txtInitialTime_TextChanged(object sender, EventArgs e)
-        {
-            UpdateTamanhoDoIntervalo();
-
-            var intervalo = PegaIntervaloSelecionado();
-
-            if (intervalo != null)
-            {
-                intervalo.Inicio = txtInitialTime.Text.ToTimeSpan();
-                dataGridView.Refresh();
-            }
-        }
-
-        private void txtFinalTime_TextChanged(object sender, EventArgs e)
-        {
-            UpdateTamanhoDoIntervalo();
-
-            var intervalo = PegaIntervaloSelecionado();
-
-            if (intervalo != null)
-            {
-                intervalo.Final = txtFinalTime.Text.ToTimeSpan();
-                dataGridView.Refresh();
-            }
         }
 
         private void UpdateTamanhoDoIntervalo()
@@ -220,6 +209,9 @@ namespace CortadorDeAudio
 
             var newTime = txtInitialTime.Text.ToTimeSpan().Add(new TimeSpan(0, 0, 0, 0, 100));
 
+            if (newTime >= _audioPlayer.GetMusicTotalTime())
+                return;
+
             txtInitialTime.Text = newTime.ToStringFormat();
         }
 
@@ -229,6 +221,9 @@ namespace CortadorDeAudio
                 return;
 
             var newTime = txtInitialTime.Text.ToTimeSpan().Add(new TimeSpan(0, 0, 0, 0, -100));
+
+            if (newTime <= TimeSpan.Zero)
+                return;
 
             txtInitialTime.Text = newTime.ToStringFormat();
         }
@@ -258,10 +253,7 @@ namespace CortadorDeAudio
             if (!_audioPlayer.MusicLoaded)
                 return;
 
-            _intervalo = PegaIntervaloSelecionado();
-
-            if (_intervalo == null)
-                throw new Exception("Não há linhas selecionadas!");
+            _intervalo = PegaIntervaloDaTela();
 
             if(_intervalo.Inicio >= _audioPlayer.GetMusicTotalTime() || _intervalo.Final >= _audioPlayer.GetMusicTotalTime())
                 throw new Exception("Intervalo selecionado não esta contido no audio selecionado!");
@@ -271,22 +263,39 @@ namespace CortadorDeAudio
             _audioPlayer.SetMusicCurrentTime(initialTime);
         }
 
+        private void buttonStopExecuteInterval_Click(object sender, EventArgs e)
+        {
+            _intervalo = null;
+        }
+
+        private void txtTime_TextChanged(object sender, EventArgs e)
+        {
+            UpdateTamanhoDoIntervalo();
+        }
+
         private Intervalo PegaIntervaloSelecionado()
         {
             var currentRowIndex = dataGridView.CurrentRow?.Index ?? -1;
 
             if (currentRowIndex < 0)
-                return null;
+                throw new Exception("Selecione uma linha!");
 
             return _intervalos[currentRowIndex];
+        }
+
+        private Intervalo PegaIntervaloDaTela()
+        {
+            ValidaIntervaloDaTela();
+
+            var inicio = txtInitialTime.Text.ToTimeSpan();
+            var final = txtFinalTime.Text.ToTimeSpan();
+
+            return new Intervalo(inicio, final);
         }
 
         private void buttonRemoveInterval_Click(object sender, EventArgs e)
         {
             var intervalo = PegaIntervaloSelecionado();
-
-            if (intervalo == null)
-                throw new Exception("Selecione uma linha!");
 
             _intervalos.Remove(intervalo);
 
@@ -379,6 +388,39 @@ namespace CortadorDeAudio
             catch (Exception ex)
             {
                 MessageBox.Show("Erro ao carregar o arquivo!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void dataGridView_DoubleClick(object sender, EventArgs e)
+        {
+            if (!_intervalos.Any())
+                return;
+
+            try
+            {
+                var intervalo = PegaIntervaloSelecionado();
+
+                if (intervalo == null)
+                    return;
+
+                txtInitialTime.Text = intervalo.Inicio.ToStringFormat();
+
+                txtFinalTime.Text = intervalo.Final.ToStringFormat();
+
+                ValidaIntervaloDaTela();
+
+                if (_intervalo != null)
+                {
+                    _intervalo.Inicio = intervalo.Inicio;
+                    _intervalo.Final = intervalo.Final;
+
+                    _audioPlayer.SetMusicCurrentTime(intervalo.Inicio);
+                }
+            }
+            catch (Exception ex)
+            {
+                _intervalo = null;
+                MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
