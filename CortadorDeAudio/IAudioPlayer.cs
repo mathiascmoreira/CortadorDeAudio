@@ -8,22 +8,20 @@ namespace CortadorDeAudio
 
         void LoadMusic(string path);
 
+        string MusicFileName { get; }
+
         bool MusicLoaded { get; set; }
-
-        void SetPosition(decimal position);
-        decimal GetPosition();
-
+       
         void Play();
         void Pause();
         void Stop();
         void Restart();
 
-        void StepAhead(short milliseconds);
-        void StepBack(short milliseconds);
+        void StepAhead(TimeSpan time);
+        void StepBack(TimeSpan time);
         TimeSpan GetMusicTotalTime();
         TimeSpan GetMusicCurrentTime();
         void SetMusicCurrentTime(TimeSpan time);
-
 
         event EventHandler OnPlayerEnds;
     }

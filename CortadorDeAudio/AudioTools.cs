@@ -7,30 +7,24 @@ namespace CortadorDeAudio
     {
         public void TrimAudio(string filePath, string savePath, TimeSpan from, TimeSpan to)
         {
-            
-        }
-
-        private static void TrimWavFile(string inPath, string outPath, TimeSpan cutFromStart, TimeSpan cutFromEnd)
-        {
-            using (WaveFileReader reader = new WaveFileReader(inPath))
+            using (AudioFileReader reader = new AudioFileReader(filePath))
             {
-                using (WaveFileWriter writer = new WaveFileWriter(outPath, reader.WaveFormat))
+                using (WaveFileWriter writer = new WaveFileWriter(savePath, reader.WaveFormat))
                 {
                     int bytesPerMillisecond = reader.WaveFormat.AverageBytesPerSecond / 1000;
 
-                    int startPos = (int)cutFromStart.TotalMilliseconds * bytesPerMillisecond;
+                    int startPos = (int)from.TotalMilliseconds * bytesPerMillisecond;
                     startPos = startPos - startPos % reader.WaveFormat.BlockAlign;
 
-                    int endBytes = (int)cutFromEnd.TotalMilliseconds * bytesPerMillisecond;
-                    endBytes = endBytes - endBytes % reader.WaveFormat.BlockAlign;
-                    int endPos = (int)reader.Length - endBytes;
+                    int endPos = (int)to.TotalMilliseconds * bytesPerMillisecond;
+                    endPos = endPos - endPos % reader.WaveFormat.BlockAlign;                    
 
                     TrimWavFile(reader, writer, startPos, endPos);
                 }
             }
         }
 
-        private static void TrimWavFile(WaveFileReader reader, WaveFileWriter writer, int startPos, int endPos)
+        private static void TrimWavFile(AudioFileReader reader, WaveFileWriter writer, int startPos, int endPos)
         {
             reader.Position = startPos;
             byte[] buffer = new byte[1024];
@@ -43,7 +37,7 @@ namespace CortadorDeAudio
                     int bytesRead = reader.Read(buffer, 0, bytesToRead);
                     if (bytesRead > 0)
                     {
-                        writer.WriteData(buffer, 0, bytesRead);
+                        writer.Write(buffer, 0, bytesRead);
                     }
                 }
             }

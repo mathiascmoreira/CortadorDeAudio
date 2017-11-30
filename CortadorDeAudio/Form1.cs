@@ -12,6 +12,7 @@ namespace CortadorDeAudio
     public partial class Form1 : Form
     {
         private readonly IAudioPlayer _audioPlayer;
+        private readonly IAudioTools _audioTools;
         private System.Timers.Timer _timer;
         private BindingList<Intervalo> _intervalos;
         private Intervalo _intervalo;
@@ -21,6 +22,7 @@ namespace CortadorDeAudio
             InitializeComponent();
 
             _audioPlayer = new AudioPlayer();
+            _audioTools = new AudioTools();
             progressBar.Maximum = 1000;
             _intervalos = new BindingList<Intervalo>();
 
@@ -147,7 +149,7 @@ namespace CortadorDeAudio
                 _audioPlayer.SetMusicCurrentTime(_intervalo.Inicio);
             }
 
-            var progressBarPosition = Convert.ToInt32(decimal.Floor(_audioPlayer.GetPosition() * progressBar.Maximum));
+            var progressBarPosition = GetProgressBarPosition(_audioPlayer.GetMusicCurrentTime(), _audioPlayer.GetMusicTotalTime());
 
             if (progressBar.InvokeRequired)
             {
@@ -167,6 +169,13 @@ namespace CortadorDeAudio
                     timeLabel.Text = GetTimeLabelText();
                 });
             }
+        }
+
+        private int GetProgressBarPosition(TimeSpan currentTime, TimeSpan totalTime)
+        {
+            var position = (int)(currentTime.TotalMilliseconds / totalTime.TotalMilliseconds) * progressBar.Maximum;
+
+            return position;
         }
 
         public string GetTimeLabelText()
@@ -194,12 +203,12 @@ namespace CortadorDeAudio
 
         private void buttonAvancar_Click(object sender, EventArgs e)
         {
-            _audioPlayer.StepAhead(3000);
+            _audioPlayer.StepAhead(new TimeSpan(0, 0, 0, 0, 3000));
         }
 
         private void buttonRetroceder_Click(object sender, EventArgs e)
         {
-            _audioPlayer.StepBack(3000);
+            _audioPlayer.StepBack(new TimeSpan(0, 0, 0, 0, 3000));
         }
 
         private void buttonInicialTimeMais_Click(object sender, EventArgs e)
@@ -334,13 +343,13 @@ namespace CortadorDeAudio
 
             var fileBuilder = new StringBuilder();
 
-            var folderBrowser = new SaveFileDialog
+            var saveFileDialog = new SaveFileDialog
             {
                 Title = "Selecione um local para salvar o arquivo.",
                 Filter = "txt files|*.txt"
             };
 
-            if (folderBrowser.ShowDialog() != DialogResult.OK) return;
+            if (saveFileDialog.ShowDialog() != DialogResult.OK) return;
 
             try
             {
@@ -349,7 +358,7 @@ namespace CortadorDeAudio
                     fileBuilder.Append($"{intervalo.Inicio.ToStringFormat()}; {intervalo.Final.ToStringFormat()}");
                 }
 
-                File.WriteAllText(folderBrowser.FileName, fileBuilder.ToString());
+                File.WriteAllText(saveFileDialog.FileName, fileBuilder.ToString());
             }
             catch (Exception)
             {
@@ -421,6 +430,37 @@ namespace CortadorDeAudio
             {
                 _intervalo = null;
                 MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void buttonSalveCuttedAudio_Click(object sender, EventArgs e)
+        {
+            if (!_intervalos.Any())
+                throw new Exception("Nao há intervalos adicionados!");
+
+            var fileBuilder = new StringBuilder();
+
+            var folderBrowser = new FolderBrowserDialog
+            {
+                Description = "Selecione um local para salvar os arquivos.",
+            };
+
+            if (folderBrowser.ShowDialog() != DialogResult.OK) return;
+
+            var fileName = folderBrowser.SelectedPath.Split('/').Last();
+
+            int fileNameSufix = 1;
+
+            string GetNextFileName()
+            {
+                var name = $"{folderBrowser.SelectedPath}//{fileName}{fileNameSufix++}";
+
+                return File.Exists(name) ? GetNextFileName() : name;
+            }
+
+            foreach (var interval in _intervalos)
+            {
+                _audioTools.TrimAudio(_audioPlayer.MusicFileName, GetNextFileName(), interval.Inicio, interval.Final);
             }
         }
     }

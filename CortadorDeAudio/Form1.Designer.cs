@@ -49,7 +49,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.txtFinalTime = new System.Windows.Forms.TextBox();
             this.buttonSaveIntervals = new System.Windows.Forms.Button();
-            this.button15 = new System.Windows.Forms.Button();
+            this.buttonSalveCuttedAudio = new System.Windows.Forms.Button();
             this.txtTamanhoDoIntervalo = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -287,15 +287,16 @@
             this.buttonSaveIntervals.UseVisualStyleBackColor = true;
             this.buttonSaveIntervals.Click += new System.EventHandler(this.buttonSaveIntervals_Click);
             // 
-            // button15
+            // buttonSalveCuttedAudio
             // 
-            this.button15.Location = new System.Drawing.Point(12, 537);
-            this.button15.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(120, 23);
-            this.button15.TabIndex = 26;
-            this.button15.Text = "Cortar Audio";
-            this.button15.UseVisualStyleBackColor = true;
+            this.buttonSalveCuttedAudio.Location = new System.Drawing.Point(12, 537);
+            this.buttonSalveCuttedAudio.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonSalveCuttedAudio.Name = "buttonSalveCuttedAudio";
+            this.buttonSalveCuttedAudio.Size = new System.Drawing.Size(120, 23);
+            this.buttonSalveCuttedAudio.TabIndex = 26;
+            this.buttonSalveCuttedAudio.Text = "Cortar Audio";
+            this.buttonSalveCuttedAudio.UseVisualStyleBackColor = true;
+            this.buttonSalveCuttedAudio.Click += new System.EventHandler(this.buttonSalveCuttedAudio_Click);
             // 
             // txtTamanhoDoIntervalo
             // 
@@ -394,7 +395,7 @@
             this.Controls.Add(this.buttonRemoveInterval);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txtTamanhoDoIntervalo);
-            this.Controls.Add(this.button15);
+            this.Controls.Add(this.buttonSalveCuttedAudio);
             this.Controls.Add(this.buttonSaveIntervals);
             this.Controls.Add(this.buttonFinalTimeMais);
             this.Controls.Add(this.buttonFinalTimeMenos);
@@ -451,7 +452,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtFinalTime;
         private System.Windows.Forms.Button buttonSaveIntervals;
-        private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.Button buttonSalveCuttedAudio;
         private System.Windows.Forms.TextBox txtTamanhoDoIntervalo;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.MenuStrip menuStrip1;

@@ -7,25 +7,12 @@ namespace CortadorDeAudio
     public class AudioPlayer : IAudioPlayer
     {
         private IWavePlayer wavePlayer;
-        private AudioFileReader audioFileReader;      
+        private AudioFileReader audioFileReader;
+        
 
         public bool MusicLoaded { get; set; }
 
-        public void SetPosition(decimal position)
-        {
-            if (!MusicLoaded)
-                return;
-
-            audioFileReader.Position = Convert.ToInt64(audioFileReader.Length * position);
-
-        }
-        public decimal GetPosition()
-        {
-            if (!MusicLoaded)
-                return 0;
-
-            return Convert.ToDecimal(audioFileReader.Position) / Convert.ToDecimal(audioFileReader.Length);
-        }
+        public string MusicFileName => audioFileReader.FileName;
 
         public AudioPlayer()
         {
@@ -102,29 +89,35 @@ namespace CortadorDeAudio
             PlayerStatus = PlayerStatus.Stopped;
         }
 
-        public void StepAhead(short milliseconds)
+        public void StepAhead(TimeSpan time)
         {
             if (!MusicLoaded)
                 return;
 
-            audioFileReader.CurrentTime = audioFileReader.CurrentTime + new TimeSpan(0, 0, 0, 0, milliseconds);
+            audioFileReader.CurrentTime = audioFileReader.CurrentTime + time;
         }
 
-        public void StepBack(short milliseconds)
+        public void StepBack(TimeSpan time)
         {
             if (!MusicLoaded)
                 return;
 
-            audioFileReader.CurrentTime = audioFileReader.CurrentTime - new TimeSpan(0, 0, 0, 0, milliseconds);
+            audioFileReader.CurrentTime = audioFileReader.CurrentTime - time;
         }
 
         public TimeSpan GetMusicTotalTime()
         {
+            if (!MusicLoaded)
+                return TimeSpan.Zero;
+
             return audioFileReader?.TotalTime ?? TimeSpan.Zero;
         }
 
         public TimeSpan GetMusicCurrentTime()
         {
+            if (!MusicLoaded)
+                return TimeSpan.Zero;
+
             return audioFileReader?.CurrentTime ?? TimeSpan.Zero;
         }
 
@@ -132,6 +125,11 @@ namespace CortadorDeAudio
         {
             if (!MusicLoaded)
                 return;
+
+            int bytesPerMillisecond = audioFileReader.WaveFormat.AverageBytesPerSecond / 1000;
+
+            int position = (int)time.TotalMilliseconds * bytesPerMillisecond;
+            position = position - position % audioFileReader.WaveFormat.BlockAlign;
 
             audioFileReader.CurrentTime = time;
         }
