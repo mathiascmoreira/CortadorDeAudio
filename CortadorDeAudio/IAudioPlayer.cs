@@ -23,6 +23,8 @@ namespace CortadorDeAudio
         TimeSpan GetMusicCurrentTime();
         void SetMusicCurrentTime(TimeSpan time);
 
+        void SetVolume(float volumeRate);
+
         event EventHandler OnPlayerEnds;
     }
 

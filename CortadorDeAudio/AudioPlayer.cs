@@ -8,7 +8,6 @@ namespace CortadorDeAudio
     {
         private IWavePlayer wavePlayer;
         private AudioFileReader audioFileReader;
-        
 
         public bool MusicLoaded { get; set; }
 
@@ -126,12 +125,20 @@ namespace CortadorDeAudio
             if (!MusicLoaded)
                 return;
 
-            int bytesPerMillisecond = audioFileReader.WaveFormat.AverageBytesPerSecond / 1000;
+            var bytesPerMillisecond = audioFileReader.WaveFormat.AverageBytesPerSecond / 1000;
 
-            int position = (int)time.TotalMilliseconds * bytesPerMillisecond;
+            var position = (int)time.TotalMilliseconds * bytesPerMillisecond;
             position = position - position % audioFileReader.WaveFormat.BlockAlign;
 
-            audioFileReader.CurrentTime = time;
+            audioFileReader.Position = position;
+        }
+
+        public void SetVolume(float volumeRate)
+        {
+            if (!MusicLoaded)
+                return;
+
+            audioFileReader.Volume = volumeRate;
         }
     }
 }

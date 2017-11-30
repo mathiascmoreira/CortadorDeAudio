@@ -23,8 +23,8 @@ namespace CortadorDeAudio
 
             _audioPlayer = new AudioPlayer();
             _audioTools = new AudioTools();
-            progressBar.Maximum = 1000;
             _intervalos = new BindingList<Intervalo>();
+            volumeControl.Value = volumeControl.Maximum;
 
             dataGridView.DataSource = _intervalos;
 
@@ -86,7 +86,7 @@ namespace CortadorDeAudio
 
             progressBar.Value = 0;
 
-            _intervalo = null;
+            ResetInterval();
         }
 
         private void buttonInicialPosition_Click(object sender, EventArgs e)
@@ -119,12 +119,13 @@ namespace CortadorDeAudio
 
         private void buttonUpdateInterval_Click(object sender, EventArgs e)
         {
-            ValidaIntervaloDaTela();
-
+            var intervaloDaTela = PegaIntervaloDaTela();
             var intervalo = PegaIntervaloSelecionado();
 
-            intervalo.Inicio = txtInitialTime.Text.ToTimeSpan();
-            intervalo.Final = txtFinalTime.Text.ToTimeSpan();
+            intervalo.Inicio = intervaloDaTela.Inicio;
+            intervalo.Final = intervaloDaTela.Final;
+
+            SetInterval(intervaloDaTela);
 
             dataGridView.Refresh();
         }
@@ -137,31 +138,35 @@ namespace CortadorDeAudio
             if (string.IsNullOrEmpty(txtFinalTime.Text))
                 throw new Exception("Selecione um tempo final!");
 
-            if (txtInitialTime.Text.ToTimeSpan() >= txtFinalTime.Text.ToTimeSpan())
+            var inicio = txtInitialTime.Text.ToTimeSpan();
+            var final = txtFinalTime.Text.ToTimeSpan();
+
+            if (inicio >= final)
                 throw new Exception("Tempo final deve ser maior que o inicial!");
+
+            if (final - inicio < new TimeSpan(0,0,0,1))
+                throw new Exception("Intervalo deve ter pelo menos 1 segundo");
+
+            if (inicio >= _audioPlayer.GetMusicTotalTime() ||
+                final >= _audioPlayer.GetMusicTotalTime() ||
+                inicio < TimeSpan.Zero || final < TimeSpan.Zero)
+                throw new Exception("Intervalo selecionado não esta contido no audio selecionado!");
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-
             if (_intervalo != null && _audioPlayer.GetMusicCurrentTime() > _intervalo.Final)
             {
                 _audioPlayer.SetMusicCurrentTime(_intervalo.Inicio);
             }
 
-            var progressBarPosition = GetProgressBarPosition(_audioPlayer.GetMusicCurrentTime(), _audioPlayer.GetMusicTotalTime());
+            UpdateProgressBarPosition();
 
-            if (progressBar.InvokeRequired)
-            {
-                progressBar.BeginInvoke((MethodInvoker)delegate
-                {
-                    if (progressBarPosition > progressBar.Maximum)
-                        Stop();
-                    else
-                        progressBar.Value = progressBarPosition;
-                });
-            }
+            UpdateTimeLabel();
+        }
 
+        private void UpdateTimeLabel()
+        {
             if (timeLabel.InvokeRequired)
             {
                 timeLabel.BeginInvoke((MethodInvoker)delegate
@@ -171,11 +176,24 @@ namespace CortadorDeAudio
             }
         }
 
-        private int GetProgressBarPosition(TimeSpan currentTime, TimeSpan totalTime)
+        private void UpdateProgressBarPosition()
         {
-            var position = (int)(currentTime.TotalMilliseconds / totalTime.TotalMilliseconds) * progressBar.Maximum;
+            var currentTime = _audioPlayer.GetMusicCurrentTime();
 
-            return position;
+            var totalTime = _audioPlayer.GetMusicTotalTime();
+
+            var position = (int)((currentTime.TotalMilliseconds / totalTime.TotalMilliseconds) * progressBar.Maximum);
+
+            if (progressBar.InvokeRequired)
+            {
+                progressBar.BeginInvoke((MethodInvoker)delegate
+                {
+                    if (position > progressBar.Maximum)
+                        Stop();
+                    else
+                        progressBar.Value = position;
+                });
+            }
         }
 
         public string GetTimeLabelText()
@@ -213,48 +231,55 @@ namespace CortadorDeAudio
 
         private void buttonInicialTimeMais_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtInitialTime.Text))
-                return;
+            if(EstaExecutandoIntervalo())
+                ExecutaIntervaloDaTela();
 
-            var newTime = txtInitialTime.Text.ToTimeSpan().Add(new TimeSpan(0, 0, 0, 0, 100));
-
-            if (newTime >= _audioPlayer.GetMusicTotalTime())
-                return;
-
-            txtInitialTime.Text = newTime.ToStringFormat();
+            txtInitialTime.Text = UpdateTimeString(txtInitialTime.Text, 100);
         }
 
         private void buttonInicialTimeMenos_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtInitialTime.Text))
-                return;
+            if (EstaExecutandoIntervalo())
+                ExecutaIntervaloDaTela();
 
-            var newTime = txtInitialTime.Text.ToTimeSpan().Add(new TimeSpan(0, 0, 0, 0, -100));
-
-            if (newTime <= TimeSpan.Zero)
-                return;
-
-            txtInitialTime.Text = newTime.ToStringFormat();
+            txtInitialTime.Text = UpdateTimeString(txtInitialTime.Text, -100);
         }
 
         private void buttonFinalTimeMais_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtFinalTime.Text))
-                return;
+            if (EstaExecutandoIntervalo())
+            {
+                ExecutaIntervaloDaTela();
 
-            var newTime = txtFinalTime.Text.ToTimeSpan().Add(new TimeSpan(0, 0, 0, 0, 100));
+                _audioPlayer.SetMusicCurrentTime(txtFinalTime.Text.ToTimeSpan()
+                    .Add(new TimeSpan(0, 0, 0, 0, -500)));
+            }
+                
 
-            txtFinalTime.Text = newTime.ToStringFormat();
+            txtFinalTime.Text = UpdateTimeString(txtFinalTime.Text, 100);
         }
 
         private void buttonFinalTimeMenos_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtFinalTime.Text))
-                return;
+            if (EstaExecutandoIntervalo())
+            {
+                ExecutaIntervaloDaTela();
 
-            var newTime = txtFinalTime.Text.ToTimeSpan().Add(new TimeSpan(0, 0, 0, 0, -100));
+                _audioPlayer.SetMusicCurrentTime(txtFinalTime.Text.ToTimeSpan()
+                    .Add(new TimeSpan(0, 0, 0, 0, -500)));
+            }
 
-            txtFinalTime.Text = newTime.ToStringFormat(); ;
+            txtFinalTime.Text = UpdateTimeString(txtFinalTime.Text, -100);
+        }
+
+        private string UpdateTimeString(string time, int milliseconds)
+        {
+            if (string.IsNullOrEmpty(time))
+                return time;
+
+            var newTime = time.ToTimeSpan().Add(new TimeSpan(0, 0, 0, 0, milliseconds));
+
+            return newTime >= _audioPlayer.GetMusicTotalTime() ? time : newTime.ToStringFormat();
         }
 
         private void buttonExecuteInterval_Click(object sender, EventArgs e)
@@ -262,19 +287,12 @@ namespace CortadorDeAudio
             if (!_audioPlayer.MusicLoaded)
                 return;
 
-            _intervalo = PegaIntervaloDaTela();
-
-            if(_intervalo.Inicio >= _audioPlayer.GetMusicTotalTime() || _intervalo.Final >= _audioPlayer.GetMusicTotalTime())
-                throw new Exception("Intervalo selecionado não esta contido no audio selecionado!");
-            
-            var initialTime = _intervalo.Inicio;
-
-            _audioPlayer.SetMusicCurrentTime(initialTime);
+            ExecutaIntervaloDaTela();
         }
 
         private void buttonStopExecuteInterval_Click(object sender, EventArgs e)
         {
-            _intervalo = null;
+           ResetInterval();
         }
 
         private void txtTime_TextChanged(object sender, EventArgs e)
@@ -308,7 +326,8 @@ namespace CortadorDeAudio
 
             _intervalos.Remove(intervalo);
 
-            _intervalo = null;
+            if(intervalo == _intervalo)
+               ResetInterval();
 
             dataGridView.Refresh();
         }
@@ -412,33 +431,24 @@ namespace CortadorDeAudio
                 if (intervalo == null)
                     return;
 
-                txtInitialTime.Text = intervalo.Inicio.ToStringFormat();
+                AtualizarIntervaloDaTela(intervalo);
 
-                txtFinalTime.Text = intervalo.Final.ToStringFormat();
-
-                ValidaIntervaloDaTela();
-
-                if (_intervalo != null)
-                {
-                    _intervalo.Inicio = intervalo.Inicio;
-                    _intervalo.Final = intervalo.Final;
-
-                    _audioPlayer.SetMusicCurrentTime(intervalo.Inicio);
-                }
+                ExecutaIntervaloDaTela();
             }
             catch (Exception ex)
             {
-                _intervalo = null;
+                ResetInterval();
                 MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void buttonSalveCuttedAudio_Click(object sender, EventArgs e)
         {
+            if(!_audioPlayer.MusicLoaded)
+                throw new Exception("Não há nenhum arquivo aberto!");
+
             if (!_intervalos.Any())
                 throw new Exception("Nao há intervalos adicionados!");
-
-            var fileBuilder = new StringBuilder();
 
             var folderBrowser = new FolderBrowserDialog
             {
@@ -447,13 +457,14 @@ namespace CortadorDeAudio
 
             if (folderBrowser.ShowDialog() != DialogResult.OK) return;
 
-            var fileName = folderBrowser.SelectedPath.Split('/').Last();
+            var fileInfo = new FileInfo(_audioPlayer.MusicFileName);
 
-            int fileNameSufix = 1;
+            var fileNameSufix = 1;
 
             string GetNextFileName()
             {
-                var name = $"{folderBrowser.SelectedPath}//{fileName}{fileNameSufix++}";
+                var name = $"{folderBrowser.SelectedPath}\\" +
+                           $"{fileInfo.Name.Replace(fileInfo.Extension, $"_part{fileNameSufix++}{fileInfo.Extension}")}";
 
                 return File.Exists(name) ? GetNextFileName() : name;
             }
@@ -462,6 +473,49 @@ namespace CortadorDeAudio
             {
                 _audioTools.TrimAudio(_audioPlayer.MusicFileName, GetNextFileName(), interval.Inicio, interval.Final);
             }
+        }
+
+        private void AtualizarIntervaloDaTela(Intervalo intervalo)
+        {
+            txtInitialTime.Text = intervalo.Inicio.ToStringFormat();
+
+            txtFinalTime.Text = intervalo.Final.ToStringFormat();
+        }
+
+        private void ExecutaIntervaloDaTela()
+        {
+            ValidaIntervaloDaTela();
+
+            SetInterval(PegaIntervaloDaTela());
+        }
+
+        private void SetInterval(Intervalo interval)
+        {
+            _intervalo = interval;
+
+            _audioPlayer.SetMusicCurrentTime(interval.Inicio);
+        }
+
+        private void ResetInterval()
+        {
+            _intervalo = null;
+        }
+
+        private void volumeControl_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateVolume();
+        }
+
+        private bool EstaExecutandoIntervalo()
+        {
+            return _intervalo != null;
+        }
+
+        private void UpdateVolume()
+        {
+            var volumeRate = (float)volumeControl.Value / volumeControl.Maximum;
+
+            _audioPlayer.SetVolume(volumeRate);
         }
     }
 }
