@@ -9,7 +9,7 @@ namespace CortadorDeAudio
 {
     public static class Extensions
     {
-        private const string stringFormat = "mm':'ss':'ffff";
+        public const string stringFormat = "mm':'ss':'ffff";
 
         public static string ToStringFormat(this TimeSpan time)
         {

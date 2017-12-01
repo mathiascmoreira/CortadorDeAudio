@@ -28,17 +28,17 @@ namespace CortadorDeAudio
 
         public PlayerStatus PlayerStatus { get; set; }      
 
-        public void LoadMusic(string path)
+        public void LoadMusic(string fileName)
         {
-            if (!File.Exists(path))
-                throw new Exception("Arquivo não existe!");
+            if (!File.Exists(fileName))
+                throw new Exception("file not found!");
 
-            var fileInfo = new FileInfo(path);
+            var fileInfo = new FileInfo(fileName);
 
             if (!fileInfo.Extension.ToUpper().Equals(".MP3"))
-                throw new Exception("Arquivo deve ser mp3!");
+                throw new Exception("file must be a mp3!");
 
-            audioFileReader = new AudioFileReader(path);
+            audioFileReader = new AudioFileReader(fileName);
 
             MusicLoaded = true;
 

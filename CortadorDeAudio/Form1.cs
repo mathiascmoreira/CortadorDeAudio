@@ -11,37 +11,28 @@ namespace CortadorDeAudio
 {
     public partial class Form1 : Form
     {
-        private readonly IAudioPlayer _audioPlayer;
-        private readonly IAudioTools _audioTools;
+        private IAudioPlayer _audioPlayer;
+        private IAudioTools _audioTools;
         private System.Timers.Timer _timer;
-        private BindingList<Intervalo> _intervalos;
-        private Intervalo _intervalo;
+        private BindingList<Interval> _intervals;
+        private Interval _interval;
 
         public Form1()
         {
-            InitializeComponent();
+            InitializeComponent();            
 
-            _audioPlayer = new AudioPlayer();
-            _audioTools = new AudioTools();
-            _intervalos = new BindingList<Intervalo>();
-            volumeControl.Value = volumeControl.Maximum;
-
-            dataGridView.DataSource = _intervalos;
-
-            _audioPlayer.OnPlayerEnds += _audioPlayer_OnPlayerEnds;
+            SetPlayer();
 
             SetTimer();
 
-            FormatGrid();
+            SetGrid();
         }
 
-        private void FormatGrid()
+        private void SetPlayer()
         {
-            const string intervaloInicioColumn = "Inicio";
-            const string intervaloFinalColumn = "Final";
-
-            dataGridView.Columns[intervaloInicioColumn].DefaultCellStyle.Format = "mm':'ss':'ffff";
-            dataGridView.Columns[intervaloFinalColumn].DefaultCellStyle.Format = "mm':'ss':'ffff";
+            _audioPlayer = new AudioPlayer();
+            _audioPlayer.OnPlayerEnds += _audioPlayer_OnPlayerEnds;
+            _audioTools = new AudioTools();
         }
 
         private void SetTimer()
@@ -54,18 +45,41 @@ namespace CortadorDeAudio
             _timer.Elapsed += Timer_Elapsed;
         }
 
+        private void SetGrid()
+        {
+            _intervals = new BindingList<Interval>();
+            dataGridView.DataSource = _intervals;
+
+            dataGridView.Columns["Begin"].DefaultCellStyle.Format = Extensions.stringFormat;
+            dataGridView.Columns["End"].DefaultCellStyle.Format = Extensions.stringFormat;
+        }
+
         private void buttonPlay_Click(object sender, EventArgs e)
         {
-            _audioPlayer.Play();
+            try
+            {
+                _audioPlayer.Play();
 
-            CheckTimer();
+                CheckTimer();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error trying to play the music! - " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void buttonPause_Click(object sender, EventArgs e)
         {
-            _audioPlayer.Pause();
+            try
+            {
+                _audioPlayer.Pause();
 
-            CheckTimer();
+                CheckTimer();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error trying to pause the music! - " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void buttonStop_Click(object sender, EventArgs e)
@@ -80,89 +94,120 @@ namespace CortadorDeAudio
 
         private void Stop()
         {
-            _audioPlayer.Stop();
+            try
+            {
+                _audioPlayer.Stop();
 
-            CheckTimer();
+                CheckTimer();
 
-            progressBar.Value = 0;
+                ResetInterval();
 
-            ResetInterval();
+                progressBar.Value = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error trying to stop the music! - " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void buttonInicialPosition_Click(object sender, EventArgs e)
         {
-            var currentTimeString = _audioPlayer.GetMusicCurrentTime();
+            try
+            {
+                var currentTimeString = _audioPlayer.GetMusicCurrentTime();
 
-            txtInitialTime.Text = currentTimeString.ToStringFormat();
+                txtInitialTime.Text = currentTimeString.ToStringFormat();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error trying to update the interval! - " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void buttonFinalPosition_Click(object sender, EventArgs e)
         {
-            var currentTimeString = _audioPlayer.GetMusicCurrentTime().ToStringFormat();
+            try
+            {
+                var currentTimeString = _audioPlayer.GetMusicCurrentTime().ToStringFormat();
 
-            txtFinalTime.Text = currentTimeString;
+                txtFinalTime.Text = currentTimeString;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error trying to update the interval! - " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void buttonAddInterval_Click(object sender, EventArgs e)
         {
             try
             {
-                ValidaIntervaloDaTela();
+                CheckFormInterval();
 
-                _intervalos.Add(new Intervalo(txtInitialTime.Text.ToTimeSpan(), txtFinalTime.Text.ToTimeSpan()));
+                _intervals.Add(new Interval(txtInitialTime.Text.ToTimeSpan(), txtFinalTime.Text.ToTimeSpan()));
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void buttonUpdateInterval_Click(object sender, EventArgs e)
         {
-            var intervaloDaTela = PegaIntervaloDaTela();
-            var intervalo = PegaIntervaloSelecionado();
+            try
+            {
+                var formInterval = GetFormInterval();
+                var interval = GetSelectedInterval();
 
-            intervalo.Inicio = intervaloDaTela.Inicio;
-            intervalo.Final = intervaloDaTela.Final;
+                interval.Begin = formInterval.Begin;
+                interval.End = formInterval.End;
 
-            SetInterval(intervaloDaTela);
-
-            dataGridView.Refresh();
+                dataGridView.Refresh();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error trying to update the interval! - " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private void ValidaIntervaloDaTela()
+        private void CheckFormInterval()
         {
             if (string.IsNullOrEmpty(txtInitialTime.Text))
-                throw new Exception("Selecione um tempo inicial!");
+                throw new Exception("Choose an initial time!");
 
             if (string.IsNullOrEmpty(txtFinalTime.Text))
-                throw new Exception("Selecione um tempo final!");
+                throw new Exception("Choose a final time!");
 
-            var inicio = txtInitialTime.Text.ToTimeSpan();
-            var final = txtFinalTime.Text.ToTimeSpan();
+            var begin = txtInitialTime.Text.ToTimeSpan();
+            var end = txtFinalTime.Text.ToTimeSpan();
 
-            if (inicio >= final)
-                throw new Exception("Tempo final deve ser maior que o inicial!");
+            if (begin >= end)
+                throw new Exception("Final time must be greater than inicial time!");
 
-            if (final - inicio < new TimeSpan(0,0,0,1))
-                throw new Exception("Intervalo deve ter pelo menos 1 segundo");
+            if (end - begin < new TimeSpan(0,0,0,1))
+                throw new Exception("Interval must have at least a second!");
 
-            if (inicio >= _audioPlayer.GetMusicTotalTime() ||
-                final >= _audioPlayer.GetMusicTotalTime() ||
-                inicio < TimeSpan.Zero || final < TimeSpan.Zero)
-                throw new Exception("Intervalo selecionado não esta contido no audio selecionado!");
+            if (begin >= _audioPlayer.GetMusicTotalTime() ||
+                end >= _audioPlayer.GetMusicTotalTime() ||
+                begin < TimeSpan.Zero || end < TimeSpan.Zero)
+                throw new Exception("The selected interval is out of bound!");
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (_intervalo != null && _audioPlayer.GetMusicCurrentTime() > _intervalo.Final)
-            {
-                _audioPlayer.SetMusicCurrentTime(_intervalo.Inicio);
-            }
+            CheckExecutingInterval();           
 
             UpdateProgressBarPosition();
 
             UpdateTimeLabel();
+        }
+
+        private void CheckExecutingInterval()
+        {
+            if (_interval != null && _audioPlayer.GetMusicCurrentTime() > _interval.End)
+            {
+                _audioPlayer.SetMusicCurrentTime(_interval.Begin);
+            }
         }
 
         private void UpdateTimeLabel()
@@ -209,14 +254,14 @@ namespace CortadorDeAudio
                 _timer.Stop();
         }
 
-        private void UpdateTamanhoDoIntervalo()
+        private void UpdateIntervalLength()
         {
             if (string.IsNullOrEmpty(txtInitialTime.Text) || string.IsNullOrEmpty(txtFinalTime.Text))
                 return;
 
-            var tamanhoDoIntervalo = txtFinalTime.Text.ToTimeSpan() - txtInitialTime.Text.ToTimeSpan();
+            var intervalLength = txtFinalTime.Text.ToTimeSpan() - txtInitialTime.Text.ToTimeSpan();
 
-            txtTamanhoDoIntervalo.Text = tamanhoDoIntervalo.ToStringFormat();
+            txtTamanhoDoIntervalo.Text = intervalLength.ToStringFormat();
         }
 
         private void buttonAvancar_Click(object sender, EventArgs e)
@@ -232,7 +277,7 @@ namespace CortadorDeAudio
         private void buttonInicialTimeMais_Click(object sender, EventArgs e)
         {
             if(EstaExecutandoIntervalo())
-                ExecutaIntervaloDaTela();
+                ExecuteFormInterval();
 
             txtInitialTime.Text = UpdateTimeString(txtInitialTime.Text, 100);
         }
@@ -240,7 +285,7 @@ namespace CortadorDeAudio
         private void buttonInicialTimeMenos_Click(object sender, EventArgs e)
         {
             if (EstaExecutandoIntervalo())
-                ExecutaIntervaloDaTela();
+                ExecuteFormInterval();
 
             txtInitialTime.Text = UpdateTimeString(txtInitialTime.Text, -100);
         }
@@ -249,7 +294,7 @@ namespace CortadorDeAudio
         {
             if (EstaExecutandoIntervalo())
             {
-                ExecutaIntervaloDaTela();
+                ExecuteFormInterval();
 
                 _audioPlayer.SetMusicCurrentTime(txtFinalTime.Text.ToTimeSpan()
                     .Add(new TimeSpan(0, 0, 0, 0, -500)));
@@ -263,7 +308,7 @@ namespace CortadorDeAudio
         {
             if (EstaExecutandoIntervalo())
             {
-                ExecutaIntervaloDaTela();
+                ExecuteFormInterval();
 
                 _audioPlayer.SetMusicCurrentTime(txtFinalTime.Text.ToTimeSpan()
                     .Add(new TimeSpan(0, 0, 0, 0, -500)));
@@ -287,7 +332,7 @@ namespace CortadorDeAudio
             if (!_audioPlayer.MusicLoaded)
                 return;
 
-            ExecutaIntervaloDaTela();
+            ExecuteFormInterval();
         }
 
         private void buttonStopExecuteInterval_Click(object sender, EventArgs e)
@@ -297,42 +342,42 @@ namespace CortadorDeAudio
 
         private void txtTime_TextChanged(object sender, EventArgs e)
         {
-            UpdateTamanhoDoIntervalo();
+            UpdateIntervalLength();
         }
 
-        private Intervalo PegaIntervaloSelecionado()
+        private Interval GetSelectedInterval()
         {
             var currentRowIndex = dataGridView.CurrentRow?.Index ?? -1;
 
             if (currentRowIndex < 0)
-                throw new Exception("Selecione uma linha!");
+                throw new Exception("Select a line!");
 
-            return _intervalos[currentRowIndex];
+            return _intervals[currentRowIndex];
         }
 
-        private Intervalo PegaIntervaloDaTela()
+        private Interval GetFormInterval()
         {
-            ValidaIntervaloDaTela();
+            CheckFormInterval();
 
-            var inicio = txtInitialTime.Text.ToTimeSpan();
-            var final = txtFinalTime.Text.ToTimeSpan();
+            var begin = txtInitialTime.Text.ToTimeSpan();
+            var end = txtFinalTime.Text.ToTimeSpan();
 
-            return new Intervalo(inicio, final);
+            return new Interval(begin, end);
         }
 
         private void buttonRemoveInterval_Click(object sender, EventArgs e)
         {
-            var intervalo = PegaIntervaloSelecionado();
+            var intervalo = GetSelectedInterval();
 
-            _intervalos.Remove(intervalo);
+            _intervals.Remove(intervalo);
 
-            if(intervalo == _intervalo)
+            if(intervalo == _interval)
                ResetInterval();
 
             dataGridView.Refresh();
         }
 
-        private void StripMenuItemOpen_Click(object sender, EventArgs e)
+        private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var theDialog = new OpenFileDialog
             {
@@ -347,17 +392,122 @@ namespace CortadorDeAudio
 
                 Text = theDialog.FileName;
 
-                _intervalos.Clear();
+                _intervals.Clear();
             }
             catch (Exception)
             {
-                MessageBox.Show("Erro ao carregar o arquivo!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro ao carregar o arquivo!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void buttonSaveIntervals_Click(object sender, EventArgs e)
+        private void loadIntervalsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!_intervalos.Any())
+            var theDialog = new OpenFileDialog
+            {
+                Title = "Selecione o arquivo com os intervalos",
+                Filter = "txt files|*.txt"
+            };
+
+            if (theDialog.ShowDialog() != DialogResult.OK) return;
+
+            try
+            {
+                var filelines = File.ReadAllLines(theDialog.FileName);
+
+                var newIntervals = new List<Interval>();
+
+                foreach (var line in filelines)
+                {
+                    var lineSplitted = line.Split(';');
+
+                    newIntervals.Add(new Interval(lineSplitted[0].ToTimeSpan(), lineSplitted[1].ToTimeSpan()));
+                }
+
+                foreach (var newInterval in newIntervals)
+                {
+                    _intervals.Add(newInterval);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar o arquivo!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void dataGridView_DoubleClick(object sender, EventArgs e)
+        {
+            if (!_intervals.Any())
+                return;
+
+            try
+            {
+                var intervalo = GetSelectedInterval();
+
+                if (intervalo == null)
+                    return;
+
+                AtualizarIntervaloDaTela(intervalo);
+
+                ExecuteFormInterval();
+            }
+            catch (Exception ex)
+            {
+                ResetInterval();
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void AtualizarIntervaloDaTela(Interval intervalo)
+        {
+            txtInitialTime.Text = intervalo.Begin.ToStringFormat();
+
+            txtFinalTime.Text = intervalo.End.ToStringFormat();
+        }
+
+        private void ExecuteFormInterval()
+        {
+            try
+            {
+                SetInterval(GetFormInterval());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error trying to execute the interval - " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void SetInterval(Interval interval)
+        {
+            _interval = interval;
+
+            _audioPlayer.SetMusicCurrentTime(interval.Begin);            
+        }
+
+        private void ResetInterval()
+        {
+            _interval = null;           
+        }
+
+        private void volumeControl_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateVolume();
+        }
+
+        private bool EstaExecutandoIntervalo()
+        {
+            return _interval != null;
+        }
+
+        private void UpdateVolume()
+        {
+            var volumeRate = (float)volumeControl.Value / volumeControl.Maximum;
+
+            _audioPlayer.SetVolume(volumeRate);
+        }
+
+        private void saveIntervalsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!_intervals.Any())
                 throw new Exception("Nao há intervalos adicionados!");
 
             var fileBuilder = new StringBuilder();
@@ -372,82 +522,25 @@ namespace CortadorDeAudio
 
             try
             {
-                foreach (var intervalo in _intervalos)
+                foreach (var intervalo in _intervals)
                 {
-                    fileBuilder.Append($"{intervalo.Inicio.ToStringFormat()}; {intervalo.Final.ToStringFormat()}");
+                    fileBuilder.Append($"{intervalo.Begin.ToStringFormat()}; {intervalo.End.ToStringFormat()}");
                 }
 
                 File.WriteAllText(saveFileDialog.FileName, fileBuilder.ToString());
             }
             catch (Exception)
             {
-                MessageBox.Show("Erro ao salvar o arquivo!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro ao salvar o arquivo!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void carregarIntervalosToolStripMenuItem_Click(object sender, EventArgs e)
+        private void exportFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var theDialog = new OpenFileDialog
-            {
-                Title = "Selecione o arquivo com os intervalos",
-                Filter = "txt files|*.txt"
-            };
-
-            if (theDialog.ShowDialog() != DialogResult.OK) return;
-
-            try
-            {
-                var filelines = File.ReadAllLines(theDialog.FileName);
-
-                var newIntervals = new List<Intervalo>();
-
-                foreach (var line in filelines)
-                {
-                    var lineSplitted = line.Split(';');
-
-                    newIntervals.Add(new Intervalo(lineSplitted[0].ToTimeSpan(), lineSplitted[1].ToTimeSpan()));
-                }
-
-                foreach (var newInterval in newIntervals)
-                {
-                    _intervalos.Add(newInterval);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao carregar o arquivo!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void dataGridView_DoubleClick(object sender, EventArgs e)
-        {
-            if (!_intervalos.Any())
-                return;
-
-            try
-            {
-                var intervalo = PegaIntervaloSelecionado();
-
-                if (intervalo == null)
-                    return;
-
-                AtualizarIntervaloDaTela(intervalo);
-
-                ExecutaIntervaloDaTela();
-            }
-            catch (Exception ex)
-            {
-                ResetInterval();
-                MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void buttonSalveCuttedAudio_Click(object sender, EventArgs e)
-        {
-            if(!_audioPlayer.MusicLoaded)
+            if (!_audioPlayer.MusicLoaded)
                 throw new Exception("Não há nenhum arquivo aberto!");
 
-            if (!_intervalos.Any())
+            if (!_intervals.Any())
                 throw new Exception("Nao há intervalos adicionados!");
 
             var folderBrowser = new FolderBrowserDialog
@@ -469,53 +562,10 @@ namespace CortadorDeAudio
                 return File.Exists(name) ? GetNextFileName() : name;
             }
 
-            foreach (var interval in _intervalos)
+            foreach (var interval in _intervals)
             {
-                _audioTools.TrimAudio(_audioPlayer.MusicFileName, GetNextFileName(), interval.Inicio, interval.Final);
+                _audioTools.TrimAudio(_audioPlayer.MusicFileName, GetNextFileName(), interval.Begin, interval.End);
             }
-        }
-
-        private void AtualizarIntervaloDaTela(Intervalo intervalo)
-        {
-            txtInitialTime.Text = intervalo.Inicio.ToStringFormat();
-
-            txtFinalTime.Text = intervalo.Final.ToStringFormat();
-        }
-
-        private void ExecutaIntervaloDaTela()
-        {
-            ValidaIntervaloDaTela();
-
-            SetInterval(PegaIntervaloDaTela());
-        }
-
-        private void SetInterval(Intervalo interval)
-        {
-            _intervalo = interval;
-
-            _audioPlayer.SetMusicCurrentTime(interval.Inicio);
-        }
-
-        private void ResetInterval()
-        {
-            _intervalo = null;
-        }
-
-        private void volumeControl_ValueChanged(object sender, EventArgs e)
-        {
-            UpdateVolume();
-        }
-
-        private bool EstaExecutandoIntervalo()
-        {
-            return _intervalo != null;
-        }
-
-        private void UpdateVolume()
-        {
-            var volumeRate = (float)volumeControl.Value / volumeControl.Maximum;
-
-            _audioPlayer.SetVolume(volumeRate);
         }
     }
 }
