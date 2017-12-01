@@ -1,5 +1,25 @@
 a fazer:
 -> a clicar em incrementar ou decrementar, avanca ou retroceder etc e segurar incrementar os valores de forma continua
 -> colocar logica de executar intervalo dentro do player
--> salvar o audio com tamanho menor
 -> permitir ordenar a grid
+-> as vezes o seeker não é zerado quando da o stop
+-> implementar marcadores de tempo
+-> implementar player de audio
+
+->Terminar implementação do metodo SortIntervals() para ordenar os elemento por 
+tempo de inicio ao adicionar ou remover um elemento.
+->Testar se a necessidade de usar o metodo Refresh da grid
+
+->criar botao novo intervalo onde ao clicar o intervalo final do intervalo anterior passa
+a ser o intervalo inicial do proximo modelo e o intervalo final é zerado. e player comeca a 
+tocar logo em seguida a partir do novo ponto inicial
+-> ao clicar incrementar ou decrementar posicao (+ ou _) o player comeca a executar daquele ponto
+mesmo não tento intervalo(apenas executa a musica e seta a posicao para a quele ponto)
+->mudar nome dos controles para ingles
+
+->colocar descrição das funcionalidades ao passar o mouse em cima
+
+->criar documentação
+
+
+-> organizar melhor os open file dialogs (coloca-los no design)

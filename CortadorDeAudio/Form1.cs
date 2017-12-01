@@ -150,14 +150,46 @@ namespace CortadorDeAudio
         {
             try
             {
-                CheckFormInterval();
-
-                _intervals.Add(new Interval(txtInitialTime.Text.ToTimeSpan(), txtFinalTime.Text.ToTimeSpan()));
+                AddFormInterval();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void buttonRemoveInterval_Click(object sender, EventArgs e)
+        {
+            RemoveSelectedInterval();
+        }
+
+        private void AddFormInterval()
+        {
+            _intervals.Add(GetFormInterval());
+
+            SortIntervals();
+
+            //dataGridView.Refresh();
+        }
+
+        private void RemoveSelectedInterval()
+        {
+            var intervalo = GetSelectedInterval();
+
+            _intervals.Remove(intervalo);
+
+            if (intervalo == _interval)
+                ResetInterval();
+
+            SortIntervals();
+
+            //dataGridView.Refresh();
+        }
+
+        private void SortIntervals()
+        {
+            if (!_intervals.Any())
+                return;
         }
 
         private void buttonUpdateInterval_Click(object sender, EventArgs e)
@@ -366,7 +398,14 @@ namespace CortadorDeAudio
 
         private void txtTime_TextChanged(object sender, EventArgs e)
         {
-            UpdateIntervalLength();
+            try
+            {
+                UpdateIntervalLength();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error trying to execute the interval! - " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private Interval GetSelectedInterval()
@@ -389,17 +428,7 @@ namespace CortadorDeAudio
             return new Interval(begin, end);
         }
 
-        private void buttonRemoveInterval_Click(object sender, EventArgs e)
-        {
-            var intervalo = GetSelectedInterval();
-
-            _intervals.Remove(intervalo);
-
-            if(intervalo == _interval)
-               ResetInterval();
-
-            dataGridView.Refresh();
-        }
+       
 
         private void dataGridView_DoubleClick(object sender, EventArgs e)
         {

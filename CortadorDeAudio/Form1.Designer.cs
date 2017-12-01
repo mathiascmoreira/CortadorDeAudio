@@ -128,11 +128,11 @@
             this.progressBar.Size = new System.Drawing.Size(568, 11);
             this.progressBar.TabIndex = 7;
             // 
-            // buttonRetroceder
+            // ButtonSkipBackward
             // 
             this.ButtonSkipBackward.Location = new System.Drawing.Point(123, 74);
             this.ButtonSkipBackward.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ButtonSkipBackward.Name = "buttonRetroceder";
+            this.ButtonSkipBackward.Name = "ButtonSkipBackward";
             this.ButtonSkipBackward.Size = new System.Drawing.Size(33, 23);
             this.ButtonSkipBackward.TabIndex = 8;
             this.ButtonSkipBackward.Text = "<";
@@ -152,6 +152,7 @@
             // 
             // dataGridView
             // 
+            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Location = new System.Drawing.Point(12, 270);
             this.dataGridView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -161,11 +162,11 @@
             this.dataGridView.TabIndex = 11;
             this.dataGridView.DoubleClick += new System.EventHandler(this.dataGridView_DoubleClick);
             // 
-            // buttonAvancar
+            // ButtonSkipForward
             // 
             this.ButtonSkipForward.Location = new System.Drawing.Point(161, 74);
             this.ButtonSkipForward.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ButtonSkipForward.Name = "buttonAvancar";
+            this.ButtonSkipForward.Name = "ButtonSkipForward";
             this.ButtonSkipForward.Size = new System.Drawing.Size(33, 23);
             this.ButtonSkipForward.TabIndex = 14;
             this.ButtonSkipForward.Text = ">";
@@ -204,48 +205,48 @@
             this.buttonAddInterval.UseVisualStyleBackColor = true;
             this.buttonAddInterval.Click += new System.EventHandler(this.buttonAddInterval_Click);
             // 
-            // buttonInicialTimeMenos
+            // buttonInicialDecreaseTime
             // 
             this.buttonInicialDecreaseTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonInicialDecreaseTime.Location = new System.Drawing.Point(87, 136);
             this.buttonInicialDecreaseTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.buttonInicialDecreaseTime.Name = "buttonInicialTimeMenos";
+            this.buttonInicialDecreaseTime.Name = "buttonInicialDecreaseTime";
             this.buttonInicialDecreaseTime.Size = new System.Drawing.Size(19, 23);
             this.buttonInicialDecreaseTime.TabIndex = 18;
             this.buttonInicialDecreaseTime.Text = "-";
             this.buttonInicialDecreaseTime.UseVisualStyleBackColor = true;
             this.buttonInicialDecreaseTime.Click += new System.EventHandler(this.buttonInicialDecreaseTime_Click);
             // 
-            // buttonInicialTimeMais
+            // buttonInicialIncreaseTime
             // 
             this.buttonInicialIncreaseTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonInicialIncreaseTime.Location = new System.Drawing.Point(255, 136);
             this.buttonInicialIncreaseTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.buttonInicialIncreaseTime.Name = "buttonInicialTimeMais";
+            this.buttonInicialIncreaseTime.Name = "buttonInicialIncreaseTime";
             this.buttonInicialIncreaseTime.Size = new System.Drawing.Size(19, 23);
             this.buttonInicialIncreaseTime.TabIndex = 19;
             this.buttonInicialIncreaseTime.Text = "+";
             this.buttonInicialIncreaseTime.UseVisualStyleBackColor = true;
             this.buttonInicialIncreaseTime.Click += new System.EventHandler(this.buttonInicialIncreaseTime_Click);
             // 
-            // buttonFinalTimeMais
+            // buttonFinalIncreaseTime
             // 
             this.buttonFinalIncreaseTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonFinalIncreaseTime.Location = new System.Drawing.Point(255, 164);
             this.buttonFinalIncreaseTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.buttonFinalIncreaseTime.Name = "buttonFinalTimeMais";
+            this.buttonFinalIncreaseTime.Name = "buttonFinalIncreaseTime";
             this.buttonFinalIncreaseTime.Size = new System.Drawing.Size(19, 23);
             this.buttonFinalIncreaseTime.TabIndex = 24;
             this.buttonFinalIncreaseTime.Text = "+";
             this.buttonFinalIncreaseTime.UseVisualStyleBackColor = true;
             this.buttonFinalIncreaseTime.Click += new System.EventHandler(this.buttonFinalIncreaseTime_Click);
             // 
-            // buttonFinalTimeMenos
+            // buttonFinalDecreaseTime
             // 
             this.buttonFinalDecreaseTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonFinalDecreaseTime.Location = new System.Drawing.Point(87, 164);
             this.buttonFinalDecreaseTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.buttonFinalDecreaseTime.Name = "buttonFinalTimeMenos";
+            this.buttonFinalDecreaseTime.Name = "buttonFinalDecreaseTime";
             this.buttonFinalDecreaseTime.Size = new System.Drawing.Size(19, 23);
             this.buttonFinalDecreaseTime.TabIndex = 23;
             this.buttonFinalDecreaseTime.Text = "-";
@@ -282,11 +283,11 @@
             this.txtFinalTime.TabIndex = 20;
             this.txtFinalTime.TextChanged += new System.EventHandler(this.txtTime_TextChanged);
             // 
-            // txtTamanhoDoIntervalo
+            // txtintervalLength
             // 
             this.txtintervalLength.Location = new System.Drawing.Point(107, 194);
             this.txtintervalLength.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtintervalLength.Name = "txtTamanhoDoIntervalo";
+            this.txtintervalLength.Name = "txtintervalLength";
             this.txtintervalLength.ReadOnly = true;
             this.txtintervalLength.Size = new System.Drawing.Size(145, 22);
             this.txtintervalLength.TabIndex = 27;
@@ -441,6 +442,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtInitialTime);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximizeBox = false;
             this.Name = "Form1";
