@@ -12,8 +12,8 @@ namespace CortadorDeAudio
         void Pause();
         void Stop();
         void Restart();
-        void StepAhead(TimeSpan time);
-        void StepBack(TimeSpan time);
+        void SkipForward(TimeSpan time);
+        void SkipBackward(TimeSpan time);
         TimeSpan GetMusicTotalTime();
         TimeSpan GetMusicCurrentTime();
         void SetMusicCurrentTime(TimeSpan time);

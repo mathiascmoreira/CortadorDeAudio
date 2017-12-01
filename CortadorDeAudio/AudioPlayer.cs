@@ -88,20 +88,24 @@ namespace CortadorDeAudio
             PlayerStatus = PlayerStatus.Stopped;
         }
 
-        public void StepAhead(TimeSpan time)
+        public void SkipForward(TimeSpan time)
         {
             if (!MusicLoaded)
                 return;
 
-            audioFileReader.CurrentTime = audioFileReader.CurrentTime + time;
+            var newTime = audioFileReader.CurrentTime + time;
+
+            audioFileReader.CurrentTime = newTime >= audioFileReader.TotalTime ? time : newTime;
         }
 
-        public void StepBack(TimeSpan time)
+        public void SkipBackward(TimeSpan time)
         {
             if (!MusicLoaded)
                 return;
 
-            audioFileReader.CurrentTime = audioFileReader.CurrentTime - time;
+           var newTime = audioFileReader.CurrentTime - time;
+
+            audioFileReader.CurrentTime = newTime <= TimeSpan.Zero ? time : newTime;
         }
 
         public TimeSpan GetMusicTotalTime()

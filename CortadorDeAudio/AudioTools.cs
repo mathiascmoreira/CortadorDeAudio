@@ -1,4 +1,5 @@
 ﻿using System;
+using NAudio.Lame;
 using NAudio.Wave;
 
 namespace CortadorDeAudio
@@ -9,7 +10,7 @@ namespace CortadorDeAudio
         {
             using (var reader = new AudioFileReader(filePath))
             {
-                using (var writer = new WaveFileWriter(savePath, reader.WaveFormat))
+                using (var writer = new LameMP3FileWriter(savePath, reader.WaveFormat, LAMEPreset.ABR_128))
                 {
                     var bytesPerMillisecond = reader.WaveFormat.AverageBytesPerSecond / 1000;
 
@@ -24,7 +25,7 @@ namespace CortadorDeAudio
             }
         }
 
-        private static void TrimWavFile(AudioFileReader reader, WaveFileWriter writer, int startPos, int endPos)
+        private static void TrimWavFile(AudioFileReader reader, LameMP3FileWriter writer, int startPos, int endPos)
         {
             reader.Position = startPos;
             var buffer = new byte[1024];
