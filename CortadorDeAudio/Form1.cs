@@ -400,6 +400,8 @@ namespace CortadorDeAudio
             }
         }
 
+
+        //  DEVE VALIDAR O ARQUIVO
         private void loadIntervalsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var theDialog = new OpenFileDialog
@@ -420,9 +422,11 @@ namespace CortadorDeAudio
                 {
                     var lineSplitted = line.Split(';');
 
-                    newIntervals.Add(new Interval(lineSplitted[0].ToTimeSpan(), lineSplitted[1].ToTimeSpan()));
-                }
+                    var interval = new Interval(lineSplitted[0].ToTimeSpan(), lineSplitted[1].ToTimeSpan());
 
+                    newIntervals.Add(interval);
+                }
+                
                 foreach (var newInterval in newIntervals)
                 {
                     _intervals.Add(newInterval);
